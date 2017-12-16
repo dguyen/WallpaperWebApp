@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'
-
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 // Components
 import { AppComponent } from './app.component';
@@ -19,7 +21,8 @@ import { SpotifyModuleComponent } from './spotify-module/spotify-module.componen
   imports: [
     BrowserModule,
     HttpModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [SpotifyService],
   bootstrap: [AppComponent]
