@@ -1,0 +1,54 @@
+
+
+<div class="container">
+	<div id="mainContainer">
+		<div id="header">
+			<div id="spotifyLogo" (click)="changeView('playlistView')"> <!-- (click) is temp. rmv later-->
+				<img src="../../assets/img/spotify-logo.png">
+			</div>
+
+			<div id="headerTitle">{{ headerMessage }}</div>
+		</div>
+
+		<div id="loading" *ngIf="currentView == 'loadingView'">
+			
+		</div>
+
+		<div id="playlists" *ngIf="currentView == 'playlistView'">
+			<ul class="list-group">
+				<li
+					*ngFor="let playlist of playlists" 
+					(click)="selectPlaylist(playlist)">
+					
+					<div id='playlistName'>{{ playlist.name }}</div>
+				</li>
+			</ul>
+		</div>
+
+		<div id="songs" *ngIf="currentView == 'songView'">
+			<ul class="list-group">
+				<li 
+					*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
+					(dblclick)='playSong(song.track.uri, selectedPlaylist.uri)'>
+
+					<div id='songNumber'>{{ i + 1 }}</div>
+					<div id='songInfomation'>
+						{{ song.track.name }}
+						<div id='songArtists'>{{ getArtistNames(song.track.artists) }}</div>
+					</div>
+					<div id='songLength'>{{ getDuration(song.track.duration_ms) }}</div>
+						
+				</li>
+			</ul>
+		</div>
+
+		<div id="musicController">
+			<div id="musicButtons">
+				<div id='seekBack' (click)="seek('previous')"></div>
+				<div id='playPause' (click)="toggleSong()"></div>
+				<div id='seekNext' (click)="seek('next')"></div>
+			</div>
+		</div> <!-- At the footer of the application -->
+	</div>
+</div>
+
