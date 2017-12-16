@@ -1,8 +1,8 @@
 #mainContainer {
 	border: 1px solid black;
 	width: 310px;
-	background-color: rgba(6, 8, 8, 0.6);
-	margin-left: 300px;
+	background-color: rgba(6, 8, 8, 0.7);
+	margin-left: 50px;
 	margin-top: 45px;
 }
 
@@ -35,17 +35,30 @@ img {
 	float: right;
 	line-height: 55px;
 	color: #00b300;
-	opacity: 1;
+	position: relative;
+}
+
+#bodyContainer {
+	width: 310px;
+	height: 0px;
+}
+
+#line {
+  opacity: 0;
+  position: absolute;
+  margin-top: 18px;
+  height: 18px;
+  width: 1px;
+  background-color: grey;
 }
 
 #loading {
 	height: 50px;
-	border: 1px solid;
 }
 
 #playlists, #songs{
-	height: 415px;
-	width: 310px;
+	height: inherit;
+	width: inherit;
 }
 
 ul {
@@ -67,7 +80,14 @@ li {
 	padding: 0px 0px 0px 0px;
 	height: 45px;
 	border-bottom: 1px solid grey;
-	/*border-bottom*/
+
+	transition: background-color 0.1s;
+}
+
+li:hover {
+	background-color: #1a1a1a;
+	opacity: 0.85;
+	transition: background-color 0s;
 }
 
 #playlistName {
@@ -100,7 +120,6 @@ li {
 	bottom: 0;
 	text-align: left;
 	padding-top: 7px;
-	/*text-decoration: none;*/
 }
 
 #songArtists {
@@ -124,9 +143,10 @@ li {
 }
 
 #musicController {
+	/*display: none;*/
 	height: 55px;
 	width: inherit;
-	background-color: rgba(6, 8, 8, 0.5);
+	background-color: rgba(6, 8, 8, 0.8);
 }
 
 #musicButtons {
@@ -203,3 +223,4 @@ li {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: rgba(38, 38, 38, 0.5);
 }
+

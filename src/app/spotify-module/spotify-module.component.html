@@ -7,39 +7,43 @@
 				<img src="../../assets/img/spotify-logo.png">
 			</div>
 
-			<div id="headerTitle">{{ headerMessage }}</div>
+			<div id="headerTitle">
+				<span id="line"></span>
+				<span id="headerLetters"></span>
+			</div>
 		</div>
 
-		<div id="loading" *ngIf="currentView == 'loadingView'">
-			
-		</div>
+		<div id="bodyContainer">			
+			<div id="loading" *ngIf="currentView == 'loadingView'">
+			</div>
 
-		<div id="playlists" *ngIf="currentView == 'playlistView'">
-			<ul class="list-group">
-				<li
-					*ngFor="let playlist of playlists" 
-					(click)="selectPlaylist(playlist)">
-					
-					<div id='playlistName'>{{ playlist.name }}</div>
-				</li>
-			</ul>
-		</div>
-
-		<div id="songs" *ngIf="currentView == 'songView'">
-			<ul class="list-group">
-				<li 
-					*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
-					(dblclick)='playSong(song.track.uri, selectedPlaylist.uri)'>
-
-					<div id='songNumber'>{{ i + 1 }}</div>
-					<div id='songInfomation'>
-						{{ song.track.name }}
-						<div id='songArtists'>{{ getArtistNames(song.track.artists) }}</div>
-					</div>
-					<div id='songLength'>{{ getDuration(song.track.duration_ms) }}</div>
+			<div id="playlists" *ngIf="currentView == 'playlistView'">
+				<ul class="list-group">
+					<li
+						*ngFor="let playlist of playlists" 
+						(click)="selectPlaylist(playlist)">
 						
-				</li>
-			</ul>
+						<div id='playlistName'>{{ playlist.name }}</div>
+					</li>
+				</ul>
+			</div>
+
+			<div id="songs" *ngIf="currentView == 'songView'">
+				<ul class="list-group">
+					<li 
+						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
+						(click)='playSong(song.track.uri, selectedPlaylist.uri)'>
+
+						<div id='songNumber'>{{ i + 1 }}</div>
+						<div id='songInfomation'>
+							{{ song.track.name }}
+							<div id='songArtists'>{{ getArtistNames(song.track.artists) }}</div>
+						</div>
+						<div id='songLength'>{{ getDuration(song.track.duration_ms) }}</div>
+							
+					</li>
+				</ul>
+			</div>
 		</div>
 
 		<div id="musicController">
@@ -51,4 +55,3 @@
 		</div> <!-- At the footer of the application -->
 	</div>
 </div>
-
