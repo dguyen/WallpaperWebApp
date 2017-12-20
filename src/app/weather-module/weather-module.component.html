@@ -1,0 +1,25 @@
+<div class='container-fluid' style='background-color: grey'>
+	
+	<div class='weatherInfo'>
+		<div id='date'>{{ currDate }}</div>
+
+		<div id='temp'>
+			{{ currTemp }}&deg;
+			<span id='tempSign'>C</span>
+		</div>
+		<div id='minMaxTemp'>
+			{{ maxTemp }}&deg;
+			<span id='minTemp'>{{ minTemp }}&deg;</span>
+		</div>
+	</div>
+
+	<div class='weatherNavigation'>
+		<div class='weatherIcon' 
+			*ngFor="let i = index; let day of weatherData"
+			(click)="changeDay($event, i)">
+
+			<i class="wi wi-day-cloudy"></i>
+			<div class='weatherDate'>{{ parseShortDate(weatherData[i].date) }}</div>
+		</div>
+	</div>	
+</div>

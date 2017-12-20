@@ -1,0 +1,74 @@
+div {
+	/*border: 1px solid orange;*/
+}
+
+.container-fluid {
+	height: 100%;
+	padding-top: 25em;
+	color: black;
+	font-family: Arial;
+	font-weight: bold;
+	user-select: none;
+}
+
+.weatherNavigation {
+	display: inline-block;
+	margin-top: 4em;
+}
+
+.weatherInfo {
+	opacity: 0;
+}
+
+i {
+	font-size: 2em;
+	font-weight: normal;
+}
+
+#date {
+	font-size: 1.25em;
+	margin-bottom: -1.5em;
+}
+
+#temp {
+	font-size: 8em;
+	height: 1.1em;
+}
+
+#tempSign {
+	font-weight: bold;
+	font-size: 0.3em;
+	margin-left: -1.1em;
+}
+
+#minMaxTemp {
+	font-size: 1.75em;
+	display: inline-block;
+	border: 2px solid;
+	border-left: none;
+	border-right: none;
+	margin-top: 10px;
+	width: 9em;
+}
+
+#minTemp {
+	color: #262626;
+
+}
+
+.weatherIcon {
+	float: left;
+	height: 50px;
+	width: 60px;
+	transition: color 0.1s;
+}
+
+.weatherIcon:hover {
+	color: #d9d9d9;
+	transition: color 0.3s;
+}
+
+
+.selectedWeatherIcon {
+	color: #e6e6e6;
+}
