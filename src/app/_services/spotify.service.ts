@@ -6,31 +6,50 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class SpotifyService {
     refreshToken: String = "AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w"
-    token: String = null;
+    token: String = null;z
+    tokenExpiry: number = 0;
+    currentTime: number = 0;
     headers = new Headers();
-    // result: any;
     initialized: any;
 
 
     constructor(private _http: Http) { 
         this.headers.append('Content-type', 'application/json');
-        this.initialized = this.obtainToken();
+        this.initialized = this.initializeTokens();
     }
+
+    obtainNewToken(){
+        this._http.get('/api/refresh_token', {
+            params: {'refresh_token': this.refreshToken}
+        }).map(res => res.json()).subscribe(
+            res => {
+                this.token = res.access_token;
+                this.tokenExpiry = res.expires_in;
+            },
+            err => {
+                console.log(err);
+            }
+        );
+    }
+
 
     /*
     * Retrieves an active token by using the refresh token
     * @param {} 
     * @return {}
     */
-    obtainToken(){
+    initializeTokens(){
         return new Promise((resolve, reject) => {
             this._http.get('/api/refresh_token', {
                 params: {'refresh_token': this.refreshToken}
             }).subscribe(
                 res => {
-                    var tmp = res.json().access_token;
-                    if(tmp) this.token = tmp;
+                    var tmp = res.json();
+                    if(tmp.access_token) this.token = tmp.access_token;
                     this.headers.append('Authorization', 'Bearer ' + this.token);
+
+                    this.tokenExpiry = tmp.expires_in;
+                    setInterval(() => {this.obtainNewToken();}, (this.tokenExpiry - 20) * 1000);
                     resolve();
                 },
                 err => {

@@ -1,5 +1,3 @@
-
-
 <div class="container">
 	<div id="mainContainer">
 		<div id="header">
@@ -32,15 +30,20 @@
 				<ul class="list-group">
 					<li 
 						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
-						(click)='playSong(song.track.uri, selectedPlaylist.uri)'>
+						(click)='playSong(song.track.uri, selectedPlaylist.uri); test($event)'>
 
-						<div id='songNumber'>{{ i + 1 }}</div>
-						<div id='songInfomation'>
-							{{ song.track.name }}
-							<div id='songArtists'>{{ getArtistNames(song.track.artists) }}</div>
+						<div class='songNumber'>
+							<span id='songText'>{{ i + 1 }}</span>
 						</div>
-						<div id='songLength'>{{ getDuration(song.track.duration_ms) }}</div>
-							
+						<div class='songInfomation'>
+							<span id='songText'>{{ song.track.name }}</span>
+							<div class='songArtists'>
+								<span id='songText'>{{getArtistNames(song.track.artists)}}</span>
+							</div>
+						</div>
+						<div class='songLength'>
+							<span id='songArtists'>{{getDuration(song.track.duration_ms)}}</span>
+						</div>
 					</li>
 				</ul>
 			</div>
@@ -49,7 +52,7 @@
 		<div id="musicController">
 			<div id="musicButtons">
 				<div id='seekBack' (click)="seek('previous')"></div>
-				<div id='playPause' (click)="toggleSong()"></div>
+				<div id='playPause' (dbclick)="toggleSong()"></div>
 				<div id='seekNext' (click)="seek('next')"></div>
 			</div>
 		</div> <!-- At the footer of the application -->

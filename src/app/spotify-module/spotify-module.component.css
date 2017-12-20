@@ -4,14 +4,14 @@
 	background-color: rgba(6, 8, 8, 0.7);
 	margin-left: 50px;
 	margin-top: 45px;
+	user-select: none;
 }
 
 #header {
-	/*opacity: 0.9;*/
 	background-color: rgba(6, 8, 8, 0.8);
 	height: 50px;
 	border-bottom: 1px grey;
-	/*border: 1px solid;*/
+	width: 310px;
 }
 
 img {
@@ -74,13 +74,11 @@ li {
 	text-align: left;
 	font-size: small;
 	white-space: nowrap;
-
 	position: relative;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	height: 45px;
 	border-bottom: 1px solid grey;
-
 	transition: background-color 0.1s;
 }
 
@@ -96,7 +94,7 @@ li:hover {
 	padding-left: 10px;
 }
 
-#songNumber {
+.songNumber {
 	color: #999999;
 	position: absolute;
 	top: 0;
@@ -107,7 +105,7 @@ li:hover {
 	text-align: center;
 }
 
-#songInfomation {
+.songInfomation {
 	color: #cccccc;		
 	font-size: 14px;
 	white-space: nowrap;
@@ -122,7 +120,7 @@ li:hover {
 	padding-top: 7px;
 }
 
-#songArtists {
+.songArtists {
 	color: #999999;
 	white-space: nowrap;
 	overflow: hidden;
@@ -131,7 +129,7 @@ li:hover {
 	font-size: 12px;
 }
 
-#songLength {
+.songLength {
 	color: #999999;
 	position: absolute;
 	line-height: 45px;
@@ -203,6 +201,11 @@ li:hover {
 #seekNext:active {
 	background-image: url("../../assets/img/buttons/seek_next.png");
 }
+
+.listTextColor {
+	color: #00e600;
+}
+
 
 ::-webkit-scrollbar-track
 {

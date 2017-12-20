@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { SpotifyService } from '../_services/spotify.service';
 
-import anime from '../../../node_modules/animejs/anime.js';
-import $ from '../../../node_modules/jquery/dist/jquery.js';
+import anime from 'animejs';
+import $ from 'jquery';
 
 @Component({
 	selector: 'app-spotify-module',
@@ -23,9 +23,21 @@ export class SpotifyModuleComponent implements OnInit {
 		}).catch((err) => {
 			console.log(err);
 		})
+		// $('#playlists').draggable({
+		// 	cursor: 'move',
+		// 	containment: 'parent'
+		// })
 	}
 	
 	ngOnInit() {
+	}
+
+	// Todo: Highlighting song if currently being played
+	test(evt){
+		// $(evt.target).closest('li').children('.songText').each(function() {
+		// 	$(this).addClass('listTextColor');
+		// 	console.log(1);
+		// })
 	}
 
 	initialize(){
@@ -38,7 +50,6 @@ export class SpotifyModuleComponent implements OnInit {
 
 		this._spotifyService.getUserPlaylists().subscribe(
 			res => {
-				console.log(res);
 				this.playlists = res.items;
 				this.changeView('playlistView');
 			},
@@ -49,16 +60,20 @@ export class SpotifyModuleComponent implements OnInit {
 		if(view != 'loadingView' && view != 'playlistView' && view != 'songView')
 			console.log('Invalid view');
 		
-		if(this.currentView == 'loadingView'){
+		anime({
+			targets: '#bodyContainer',
+			height: 0,
+			easing: 'easeOutExpo',
+			duration: 500
+		}).finished.then(() => {
+			this.currentView = view;
 			anime({
 				targets: '#bodyContainer',
 				height: [0, 450],
 				easing: 'easeOutExpo',
-				duration: 1000
-			})
-		}
-		this.currentView = view;
-		console.log('View changed to ' + view);
+				duration: 650
+			})	
+		})
 	}
 
 
@@ -66,12 +81,8 @@ export class SpotifyModuleComponent implements OnInit {
 		console.log('Playlist: ' + playlistSelected.name);
 		this._spotifyService.getSongsUrl(playlistSelected.href).subscribe(
 			res => {
-				console.log(1);
-				console.log(res);
 				this.selectedPlaylist = res;
 				this.changeView('songView');
-
-				console.log(this.selectedPlaylist)
 			},
 			err => {
 
@@ -79,9 +90,6 @@ export class SpotifyModuleComponent implements OnInit {
 	}
 
 	playSong(songUri, albumUri){
-		console.log('Album URI: ' + albumUri);
-		console.log('Song URI: ' + songUri);
-
 		this._spotifyService.mediaPlaySong(albumUri, songUri).subscribe(
 			res => console.log(res),
 			err => console.log(err));
@@ -105,7 +113,11 @@ export class SpotifyModuleComponent implements OnInit {
 	}
 
 	toggleSong(){
-
+		var tmp = '', 
+			currentlyPlaying = false;
+		
+		currentlyPlaying ? tmp = 'pause': tmp = 'play';
+		// this._spotifyService.mediaPausePlay(tmp);
 	}
 
 	seek(method: string){
@@ -136,7 +148,7 @@ export class SpotifyModuleComponent implements OnInit {
 				scaleY: [0, 1],
 				opacity: [0.5, 1],
 				easing: "easeOutExpo",
-				duration: 700
+				duration: 700,
 			})
 			.add({
 				targets: '#line',
