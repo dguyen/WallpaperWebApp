@@ -12,12 +12,14 @@ import { WeatherService } from './_services/weather.service';
 import { AppComponent } from './app.component';
 import { SpotifyModuleComponent } from './spotify-module/spotify-module.component';
 import { WeatherModuleComponent } from './weather-module/weather-module.component';
+import { ModuleHandlerComponent } from './module-handler/module-handler.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpotifyModuleComponent,
-    WeatherModuleComponent
+    WeatherModuleComponent,
+    ModuleHandlerComponent
   ],
   imports: [
     BrowserModule,
