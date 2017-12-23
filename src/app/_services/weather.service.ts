@@ -73,7 +73,6 @@ export class WeatherService {
 			avg += data[i].main.temp;
 			cnt += 1;
 		}
-		console.log(output);	
 		return output;
     }
 
