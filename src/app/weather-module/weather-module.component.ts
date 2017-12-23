@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
 
 import { WeatherService } from '../_services/weather.service';
 
@@ -15,7 +14,7 @@ import $ from 'jquery';
 })
 
 
-export class WeatherModuleComponent implements OnInit {
+export class WeatherModuleComponent{ 
     currTemp: number = null;
     currDate: string = '';
     currDay: number = -1;
@@ -24,26 +23,52 @@ export class WeatherModuleComponent implements OnInit {
     maxTemp: number = 0;
     animStatus: boolean = false;
 
+
     constructor(private _weatherService: WeatherService) { 
         _weatherService.initialized.then(() => {
-            this.weatherData = _weatherService.getDayData();
-            this.currDate = this.parseDate(this.weatherData[0].date);
-            this.currTemp = Math.round(_weatherService.getCurrentTemp());
-            this.minTemp = this.weatherData[0].min;
-            this.maxTemp = this.weatherData[0].max;
-            this.changeDay(null, 0);
+            this.updateUI();
+            setInterval(() => this.refreshData(), 1800000);
         })
     }
 
-    ngOnInit() {
+    /*
+    * Updates the UI with data stored inside weather service
+    * NOTE: Make sure data inside weather service is updated before calling or else nothing will update
+    * @param {}
+    * @return {} 
+    */ 
+    private updateUI(){
+        this.currDay = -1;
+        this.weatherData = this._weatherService.getDayData();
+        this.currDate = this.parseDate(this.weatherData[0].date);
+        this.currTemp = Math.round(this._weatherService.getCurrentTemp());
+        this.minTemp = this.weatherData[0].min;
+        this.maxTemp = this.weatherData[0].max;
+        this.changeDay(0);
     }
 
-    changeDay(evt, day){
+    /*
+    * Obtains new data from the weather service then updates the UI 
+    * @param {}
+    * @return {} 
+    */ 
+    refreshData(){
+        this._weatherService.initialize().then(() => {
+            this.updateUI();
+            console.log("Refreshing UI");
+        });
+    }
+
+    /*
+    * Changes the selected 'day' on the UI
+    * @param {number} a number presenting the day from now i.e. today will be day=0, tomorrow day=1
+    * @return {} 
+    */ 
+    changeDay(day){
         if(this.currDay == day || this.animStatus) return;
-        if (evt) this.highlightIcon(evt);
 
         this.animStatus = true;
-        
+        this.currDay = day;
         anime({
             targets: '.weatherInfo',
             opacity: 0,
@@ -54,9 +79,7 @@ export class WeatherModuleComponent implements OnInit {
             this.currTemp = this.weatherData[day].avg;
             this.minTemp = this.weatherData[day].min;
             this.maxTemp = this.weatherData[day].max;
-            this.currDate = this.parseDate(this.weatherData[day].date);
-            this.currDay = day;
-            
+            this.currDate = this.parseDate(this.weatherData[day].date);            
             anime({
                 targets: '.weatherInfo',
                 opacity: 1,
@@ -67,7 +90,12 @@ export class WeatherModuleComponent implements OnInit {
         })
     }
 
-    // todo
+
+    /*
+    * Parses an input date into a string format 'Dayname, DD of Monthname YYYY'
+    * @param {date} a date object representing the time you want to format
+    * @return {string} a parsed string of the date object
+    */    
     parseDate(date){
         var monthNames = [
             "January", "February", "March", "April", "May", 
@@ -82,10 +110,10 @@ export class WeatherModuleComponent implements OnInit {
         var postDate;
         
         switch (n % 10) {
-            case 1:  postDate = "st";
-            case 2:  postDate = "nd";
-            case 3:  postDate = "rd";
-            default: postDate = "th";
+            case 1:  postDate = "st"; break;
+            case 2:  postDate = "nd"; break;
+            case 3:  postDate = "rd"; break;
+            default: postDate = "th"; 
         }
         if (n >= 11 && n <= 13) postDate = "th";
 
@@ -93,44 +121,12 @@ export class WeatherModuleComponent implements OnInit {
         monthNames[date.getMonth()] + ' ' + date.getFullYear();       
     }
 
+    /*
+    * Parses an input date into a string format 'DD/MM'
+    * @param {date} a date object representing the time you want to format
+    * @return {string} a parsed string of the date object 'DD/MM'
+    */    
     parseShortDate(date){
         return date.getDate() + '/' + date.getMonth();
     }
-
-
-    // https://openweathermap.org/weather-conditions
-    getWeatherIcon(iconId){
-        var imgClass = null;
-        switch (iconId) {
-            // Day
-            case '01d': imgClass = 'wi-day-sunny';
-            case '02d': imgClass = 'wi-day-cloudy';
-            case '03d': imgClass = 'wi-cloud';
-            case '04d': imgClass = 'wi-cloudy'; // broken clouds
-            case '09d': imgClass = 'wi-day-showers';
-            case '10d': imgClass = 'wi-day-showers';
-            case '11d': imgClass = 'wi-day-sleet-storm';
-            case '13d': imgClass = 'wi-day-snow';
-            case '50d': imgClass = 'wi-windy';
-            // Night
-            case '01n': imgClass = 'wi-night-sunny';
-            case '02n': imgClass = 'wi-night-cloudy';
-            case '03n': imgClass = 'wi-cloud';
-            case '04n': imgClass = 'wi-cloudy'; // broken clouds
-            case '09n': imgClass = 'wi-night-showers';
-            case '10n': imgClass = 'wi-night-showers';
-            case '11n': imgClass = 'wi-night-sleet-storm';
-            case '13n': imgClass = 'wi-night-snow';
-            case '50n': imgClass = 'wi-windy';
-        }
-        return imgClass;
-    }
-
-    highlightIcon(evt){
-        $('.weatherNavigation').children().each(function(i) {
-            $(this).removeClass('selectedWeatherIcon');
-        })
-        $(evt.target).closest('.weatherIcon').addClass('selectedWeatherIcon');
-    }
 }
-
