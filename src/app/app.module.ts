@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 // Services
 import { SpotifyService } from './_services/spotify.service';
 import { WeatherService } from './_services/weather.service';
-
+import { StorageService } from './_services/storage.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -26,7 +26,7 @@ import { ModuleHandlerComponent } from './module-handler/module-handler.componen
     HttpModule,
     FormsModule
   ],
-  providers: [SpotifyService, WeatherService],
+  providers: [SpotifyService, WeatherService, StorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
