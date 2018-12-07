@@ -1,0 +1,152 @@
+div {
+	/*border: 1px solid black;*/
+}
+.wholePage {
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:1000;
+}
+
+.controller {
+	background-color: rgb(13, 13, 13);
+	opacity: 0.4;
+	position: absolute;
+	margin-left: 0.5em;
+	margin-top: 0.5em;
+	user-select: none;
+	overflow: none;
+	width: 40px;
+	height: 40px;
+	color: white;
+	z-index: 99999;
+}
+
+.gearSymbol {
+	display: inline-block;
+	height: inherit;
+	float: left;
+	font-size: 3em;
+	line-height: 1em;
+	font-weight: bold;
+	color: #a6a6a6;
+}
+
+.gearSymbol:hover {
+	color: #cccccc;
+}
+
+.gearSymbol:active {
+	color: #808080;
+}
+
+.content, .settings{
+	clear: left;
+	width: inherit;
+	height: 0px;
+	background-color: rgba(6, 8, 8, 0.7);
+}
+
+ul {
+	width: inherit;
+	height: inherit;
+	overflow: hidden;
+	overflow-y: none;
+	list-style-type: none;
+	padding-left: 0;
+}
+
+li {
+	text-overflow: ellipsis;
+	text-align: left;
+	white-space: nowrap;
+	position: relative;
+	margin: 0px;
+	padding: 0px;
+	height: 45px;
+	border-bottom: 1px solid grey;
+	transition: background-color 0.1s;
+}
+
+li:hover {
+	background-color: #1a1a1a;
+	opacity: 0.85;
+	transition: background-color 0s;
+}
+
+#spotifyModule {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#weatherModule {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.settings {
+	/*display: none;*/
+	overflow: hidden;
+}
+
+#bodyContainer {
+	display: inline-block;
+	width: inherit;
+	overflow: hidden;
+}
+
+
+
+
+.range-slider {
+	margin-top: 10px;
+	width: 275px;
+    display: flex;
+}
+
+.range-slider__range {
+    -webkit-appearance: none;
+    margin-top: 10px;
+    float: left;
+    width: 400px;
+    height: 10px;
+    border-radius: 5px;
+    background: #d7dcdf;
+    outline: none;
+}
+
+.range-slider__range::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    transition: background 0.15s ease-in-out;
+}
+
+.range-slider__range::-webkit-slider-thumb:hover {
+    background: #1abc9c;
+}
+
+.range-slider__range:active::-webkit-slider-thumb {
+    background: #1abc9c;
+}
+
+.range-slider__value {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 30px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 3px;
+    background: #2c3e50;
+    padding: 5px 10px;
+    margin-left: 5px;
+}

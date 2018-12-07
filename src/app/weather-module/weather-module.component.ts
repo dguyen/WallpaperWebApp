@@ -127,6 +127,6 @@ export class WeatherModuleComponent{
     * @return {string} a parsed string of the date object 'DD/MM'
     */    
     parseShortDate(date){
-        return date.getDate() + '/' + date.getMonth();
+        return date.getDate() + '/' + (date.getMonth() + 1);
     }
 }

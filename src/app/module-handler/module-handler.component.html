@@ -1,3 +1,38 @@
-<p>
-  module-handler works!
-</p>
+<div class='wholePage'>
+	
+	<div class='controller'>
+		<div class='gearSymbol' (click)='togglePanel()'>&#x2699;</div>
+
+		<div id='settingContainer'>	
+			<div class='content'>
+				<ul>
+					<li *ngFor='let module of moduleList'
+						(click)='selectModule(module)'>
+					{{ module.name }}</li>
+				</ul>
+			</div>
+
+			<div class="settings">
+				<div class="checkbox">
+					<label><input class='enableCheckbox' type="checkbox" value="">Enable</label>
+				</div>
+
+				<div class="range-slider" id="xController">
+					<label>X Position</label>
+					<input class="range-slider__range" type="range" value="50" min="0" max="100">
+					<span class="range-slider__value">0</span>
+				</div> 
+
+				<div class="range-slider" id="yController">
+					<label>Y Position</label>
+					<input class="range-slider__range" type="range" value="50" min="0" max="100">
+					<span class="range-slider__value">0</span>
+				</div> 
+			</div>		
+		</div>
+	</div>
+
+
+	<app-weather-module id='weatherModule'></app-weather-module>
+	<app-spotify-module id='spotifyModule'></app-spotify-module>
+</div>
