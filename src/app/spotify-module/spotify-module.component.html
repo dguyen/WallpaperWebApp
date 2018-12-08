@@ -12,9 +12,7 @@
 		</div>
 
 		<div id="bodyContainer">			
-			<div id="loading" *ngIf="currentView == 'loadingView'">
-			</div>
-
+			<div id="loading" *ngIf="currentView == 'loadingView'"></div>
 			<div id="playlists" *ngIf="currentView == 'playlistView'">
 				<ul class="list-group">
 					<li
@@ -25,12 +23,11 @@
 					</li>
 				</ul>
 			</div>
-
 			<div id="songs" *ngIf="currentView == 'songView'">
 				<ul class="list-group">
 					<li 
 						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
-						(click)='playSong(song.track.uri, selectedPlaylist.uri); test($event)'>
+						(click)='playSong(song.track.uri, selectedPlaylist.uri); highlight($event)'>
 
 						<div class='songNumber'>
 							<span id='songText'>{{ i + 1 }}</span>

@@ -3,38 +3,38 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class StorageService {
 
+  constructor() {
+    if (typeof (Storage) !== 'undefined') {
+      console.log('storage found');
+    } else {
+      console.log('no storage found');
+    }
+  }
 
-	constructor() { 
-        if (typeof(Storage) !== "undefined") {
-            console.log('storage found')
-        } 
-        else console.log('no storage found');
-	}
-
-
-    getStorageJSON(key: string){
-        var value = localStorage.getItem(key);
-        if(!value) return null;
-
-        try { value = JSON.parse(value); }
-        catch(err) { return null; }
-        
-        return value;
+  getStorageJSON(key: string) {
+    let value = localStorage.getItem(key);
+    if (!value) {
+      return null;
     }
 
-    getStorageString(key: string){
-        var value = localStorage.getItem(key);
-        if(!value) return null;        
-        return value;
+    try {
+      value = JSON.parse(value);
+    } catch (err) {
+      return null;
     }
+    return value;
+  }
 
-    setStorage(key: string, value: any){
-        localStorage.setItem(key, JSON.stringify(value));       
-    }
+  getStorageString(key: string) {
+    const value = localStorage.getItem(key);
+    return !value ? null : value;
+  }
 
-    deleteStorage(key){
-        localStorage.removeItem(key);
-    }
+  setStorage(key: string, value: any) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
 
-
+  deleteStorage(key) {
+    localStorage.removeItem(key);
+  }
 }

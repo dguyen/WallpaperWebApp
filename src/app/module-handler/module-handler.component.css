@@ -1,6 +1,3 @@
-div {
-	/*border: 1px solid black;*/
-}
 .wholePage {
     position:fixed;
     width:100%;
@@ -25,7 +22,6 @@ div {
 }
 
 .gearSymbol {
-	display: inline-block;
 	height: inherit;
 	float: left;
 	font-size: 3em;
@@ -89,7 +85,6 @@ li:hover {
 }
 
 .settings {
-	/*display: none;*/
 	overflow: hidden;
 }
 
@@ -98,9 +93,6 @@ li:hover {
 	width: inherit;
 	overflow: hidden;
 }
-
-
-
 
 .range-slider {
 	margin-top: 10px;

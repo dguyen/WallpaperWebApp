@@ -1,8 +1,6 @@
 <div class='container-fluid'>
-	
 	<div class='weatherInfo'>
 		<div id='date'>{{ currDate }}</div>
-
 		<div id='temp'>
 			{{ currTemp }}&deg;
 			<span id='tempSign'>C</span>
@@ -18,7 +16,6 @@
 			*ngFor="let i = index; let day of weatherData"
 			(click)="changeDay(i)"
 			[ngClass]="{'selectedWeatherIcon': currDay == i }">
-
 			<i class="{{ weatherData[i].icon }}"></i>
 			<div class='weatherDate'>{{ parseShortDate(weatherData[i].date) }}</div>
 		</div>
