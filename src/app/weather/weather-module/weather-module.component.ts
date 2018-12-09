@@ -5,8 +5,8 @@ import anime from 'animejs';
 @Component({
   selector: 'app-weather-module',
   templateUrl: './weather-module.component.html',
-  styleUrls: ['./weather-module.component.css',
-    '../../../src/assets/weather_icon/css/weather-icons.css'
+  styleUrls: ['./weather-module.component.scss',
+    '../../../../src/assets/weather_icon/css/weather-icons.css'
   ]
 })
 
