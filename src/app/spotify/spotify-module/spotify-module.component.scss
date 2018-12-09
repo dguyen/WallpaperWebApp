@@ -21,7 +21,7 @@ img {
 }
 
 #spotifyLogo {
-	background-image: url("../../assets/img/spotify-logo.png");
+	background-image: url("../../../assets/img/spotify-logo.png");
 	float: left;
 	opacity: 0.8;
 	height: 40px;
@@ -166,43 +166,43 @@ li:hover {
 
 /* Obtain correct asset later*/
 #playPause {
-	background-image: url("../../assets/img/buttons/pause.png");
+	background-image: url("../../../assets/img/buttons/pause.png");
 	height: inherit;
 	width: 60px;
 }
 
 /* Obtain correct asset later*/
 #playPause:hover {
-	background-image: url("../../assets/img/buttons/pause_hover.png");
+	background-image: url("../../../assets/img/buttons/pause_hover.png");
 }
 
 /* Obtain correct asset later*/
 #playPause:active {
-	background-image: url("../../assets/img/buttons/pause.png");
+	background-image: url("../../../assets/img/buttons/pause.png");
 }
 
 #seekBack {
-	background-image: url("../../assets/img/buttons/seek_backward.png");
+	background-image: url("../../../assets/img/buttons/seek_backward.png");
 }
 
 #seekBack:hover {
-	background-image: url("../../assets/img/buttons/seek_backward_hover.png");
+	background-image: url("../../../assets/img/buttons/seek_backward_hover.png");
 }
 
 #seekBack:active {
-	background-image: url("../../assets/img/buttons/seek_backward.png");
+	background-image: url("../../../assets/img/buttons/seek_backward.png");
 }
 
 #seekNext {
-	background-image: url("../../assets/img/buttons/seek_next.png");
+	background-image: url("../../../assets/img/buttons/seek_next.png");
 }
 
 #seekNext:hover {
-	background-image: url("../../assets/img/buttons/seek_next_hover.png");
+	background-image: url("../../../assets/img/buttons/seek_next_hover.png");
 }
 
 #seekNext:active {
-	background-image: url("../../assets/img/buttons/seek_next.png");
+	background-image: url("../../../assets/img/buttons/seek_next.png");
 }
 
 .listTextColor {

@@ -6,7 +6,7 @@ import $ from 'jquery';
 @Component({
   selector: 'app-spotify-module',
   templateUrl: './spotify-module.component.html',
-  styleUrls: ['./spotify-module.component.css']
+  styleUrls: ['./spotify-module.component.scss']
 })
 
 export class SpotifyModuleComponent implements OnInit {
