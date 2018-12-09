@@ -1,29 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
-
-import 'rxjs/add/operator/map';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SpotifyService {
-  refreshToken: String = 'AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w';
+  refreshToken = 'AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w';
   token: string = null;
   tokenExpiry = 0;
   currentTime = 0;
-  headers = new Headers();
+  headers = new HttpHeaders().set('Content-type', 'application/json');
+  // headers = new HttpHeaders();
   initialized: any;
 
-  constructor(private _http: Http) {
-    this.headers.append('Content-type', 'application/json');
+  constructor(private _http: HttpClient) {
+    // this.headers.append('Content-type', 'application/json');
     this.initialized = this.initializeTokens();
   }
 
   obtainNewToken() {
     this._http.get('/api/refresh_token', {
-      params: { 'refresh_token': this.refreshToken }
-    }).map(res => res.json()).subscribe(
+      params: new HttpParams().set('refresh_token', this.refreshToken)
+    }).subscribe(
       res => {
-        this.token = res.access_token;
-        this.tokenExpiry = res.expires_in;
+        this.token = res['access_token'];
+        this.tokenExpiry = res['expires_in'];
       },
       err => {
         throw new Error(err);
@@ -42,13 +42,11 @@ export class SpotifyService {
         params: { 'refresh_token': this.refreshToken }
       }).subscribe(
         res => {
-          const tmp = res.json();
-          if (tmp.access_token) {
-            this.token = tmp.access_token;
+          if (res['access_token']) {
+            this.token = res['access_token'];
           }
-          this.headers.append('Authorization', 'Bearer ' + this.token);
-
-          this.tokenExpiry = tmp.expires_in;
+          this.headers = this.headers.append('Authorization', 'Bearer ' + this.token);
+          this.tokenExpiry = res['expires_in'];
           setInterval(() => { this.obtainNewToken(); }, (this.tokenExpiry - 20) * 1000);
           resolve();
         },
@@ -129,7 +127,7 @@ export class SpotifyService {
 
     return this._http.put('https://api.spotify.com/v1/me/player/volume', {}, {
       headers: this.headers,
-      params: { 'volume_percent': volume }
+      params: new HttpParams().set('volume_percent', volume.toString())
     }).subscribe();
   }
 
@@ -140,7 +138,7 @@ export class SpotifyService {
   */
   getUserProfile() {
     this.checkToken();
-    return this._http.get('https://api.spotify.com/v1/me', { headers: this.headers }).map(res => res.json());
+    return this._http.get('https://api.spotify.com/v1/me', { headers: this.headers });
   }
 
   /*
@@ -150,7 +148,8 @@ export class SpotifyService {
   */
   getUserPlaylists() {
     this.checkToken();
-    return this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers }).map(res => res.json());
+    // return this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers }).map(res => res.json());
+    return this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers });
   }
 
   /*
@@ -160,7 +159,7 @@ export class SpotifyService {
   */
   getSongsUrl(url) {
     this.checkToken();
-    return this._http.get(url, { headers: this.headers }).map(res => res.json());
+    return this._http.get(url, { headers: this.headers });
   }
 
   /*
@@ -173,7 +172,7 @@ export class SpotifyService {
 
     return this._http.get('https://api.spotify.com/v1/users/' + user_id + '/playlists/' + playlist_id + '/tracks', {
       headers: this.headers
-    }).map(res => res.json());
+    });
   }
 
   /*
@@ -187,7 +186,7 @@ export class SpotifyService {
       headers: this.headers
     }).subscribe(
       res => {
-        console.log(res.json().devices);
+        console.log(res['devices']);
       },
       err => {
         console.log(err);

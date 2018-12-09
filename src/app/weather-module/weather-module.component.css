@@ -1,5 +1,6 @@
 .container-fluid {
 	position: absolute;
+	text-align: center;
 	height: auto;
 	width: 24em;
 	padding-top: 1em;
@@ -34,6 +35,7 @@ i {
 #temp {
 	font-size: 8em;
 	height: 1.1em;
+	margin-top: 20px;
 }
 
 #tempSign {

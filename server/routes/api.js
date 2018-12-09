@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const querystring = require('querystring');
-const cookieParser = require('cookie-parser');
 const request = require('request');
 
 // Spotify API settings
@@ -128,7 +127,9 @@ router.get('/refresh_token', function(req, res) {
   };
 
   request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
+    if (error) {
+      next(error);
+    } else {
       res.send({
         'access_token': body.access_token,
         'expires_in': body.expires_in

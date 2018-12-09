@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class WeatherService {
@@ -11,7 +10,7 @@ export class WeatherService {
   initialized: any;
   zip = '3149,au';
 
-  constructor(private _http: Http) {
+  constructor(private _http: HttpClient) {
     this.initialized = this.initialize();
   }
 
@@ -28,7 +27,7 @@ export class WeatherService {
           APPID: this.apiID,
           units: this.units
         }
-      }).map(res => res.json()).subscribe((res) => {
+      }).subscribe((res) => {
         this.weatherReport = res;
         resolve();
       }, (err) => {

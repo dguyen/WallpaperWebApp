@@ -16,15 +16,11 @@ export class SpotifyModuleComponent implements OnInit {
   currentView = 'loadingView';
 
   constructor(private _spotifyService: SpotifyService) {
-    _spotifyService.initialized.then((data) => {
+    _spotifyService.initialized.then(() => {
       this.initialize();
     }).catch((err) => {
       console.log(err);
     });
-    // $('#playlists').draggable({
-    // 	cursor: 'move',
-    // 	containment: 'parent'
-    // })
   }
 
   ngOnInit() {
@@ -38,14 +34,16 @@ export class SpotifyModuleComponent implements OnInit {
   initialize() {
     this._spotifyService.getUserProfile().subscribe(
       res => {
+        console.log('--');
+        console.log(res);
         this.userProfile = res;
-        this.changeHeaderText('Welcome ' + res.id);
+        this.changeHeaderText('Welcome ' + res['id']);
       },
       err => console.log(err));
 
     this._spotifyService.getUserPlaylists().subscribe(
       res => {
-        this.playlists = res.items;
+        this.playlists = res['items'];
         this.changeView('playlistView');
       },
       err => console.log(err));

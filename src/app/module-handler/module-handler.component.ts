@@ -52,7 +52,7 @@ export class ModuleHandlerComponent implements OnInit {
       if (moduleItem.enabled) {
         moduleRef.css({ 'display': 'inline-block' });
       } else {
-        moduleRef.css({ 'display': 'none' });
+        moduleRef.style.display = 'none';
       }
     });
   }
