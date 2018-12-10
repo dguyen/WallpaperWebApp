@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SpotifyService {
@@ -9,26 +8,10 @@ export class SpotifyService {
   tokenExpiry = 0;
   currentTime = 0;
   headers = new HttpHeaders().set('Content-type', 'application/json');
-  // headers = new HttpHeaders();
-  initialized: any;
+  initialized: Promise<any>;
 
   constructor(private _http: HttpClient) {
-    // this.headers.append('Content-type', 'application/json');
     this.initialized = this.initializeTokens();
-  }
-
-  obtainNewToken() {
-    this._http.get('/api/refresh_token', {
-      params: new HttpParams().set('refresh_token', this.refreshToken)
-    }).subscribe(
-      res => {
-        this.token = res['access_token'];
-        this.tokenExpiry = res['expires_in'];
-      },
-      err => {
-        throw new Error(err);
-      }
-    );
   }
 
   /*
@@ -47,7 +30,7 @@ export class SpotifyService {
           }
           this.headers = this.headers.append('Authorization', 'Bearer ' + this.token);
           this.tokenExpiry = res['expires_in'];
-          setInterval(() => { this.obtainNewToken(); }, (this.tokenExpiry - 20) * 1000);
+          setTimeout(() => { this.initializeTokens(); }, (this.tokenExpiry - 20) * 1000);
           resolve();
         },
         err => {
@@ -60,21 +43,24 @@ export class SpotifyService {
   /*
   * Pauses or resumes media on selected device
   * @param {string} can only be 'pause' or 'play'
-  * @return {Observable}
+  * @return {Promise}
   */
   mediaPausePlay(method: string) {
     this.checkToken();
     if (method !== 'pause' && method !== 'play') {
-      throw Error('Invalid input');
+      throw new Error('Invalid input');
     }
-    return this._http.put('https://api.spotify.com/v1/me/player/' + method, null,
-      { headers: this.headers }
-    ).subscribe(
-      (res) => { },
-      (err) => {
-        if (err.json().status === 403) {
-          throw new Error('Media already ' + method + ' or user not premium');
-        }
+    return new Promise((resolve, reject) => {
+      this._http.put('https://api.spotify.com/v1/me/player/' + method, null,
+        { headers: this.headers }
+      ).subscribe(
+        () => resolve(),
+        (err) => {
+          if (err.json().status === 403) {
+            throw new Error('Media already ' + method + ' or user not premium');
+          }
+          reject(err);
+      });
     });
   }
 
@@ -97,21 +83,23 @@ export class SpotifyService {
   /*
   * Seeks either the next playable song or previous playable song
   * @param {string} can only be 'next' or 'previous'
-  * @return {Observable}
+  * @return {Promise}
   */
   mediaSeek(method: string) {
     this.checkToken();
     if (method !== 'next' && method !== 'previous') {
       throw new Error('Invalid input');
     }
-
-    return this._http.post('https://api.spotify.com/v1/me/player/' + method, null, { headers: this.headers }).subscribe(
-      (res) => { },
+    return new Promise((resolve, reject) => {
+      this._http.post('https://api.spotify.com/v1/me/player/' + method, null, { headers: this.headers }).subscribe(
+      () => resolve(),
       (err) => {
         if (err.json().status === 403) {
           throw new Error('Media already ' + method + ' or user not premium');
         }
+        reject(err);
       });
+    });
   }
 
   /*
@@ -134,22 +122,29 @@ export class SpotifyService {
   /*
   * Obtains infomation about the selected user
   * @param {}
-  * @return {Observable} if successful, an object containg user data, else an error
+  * @return {Promise} if resolves, an object containg user data, else rejects with an error
   */
   getUserProfile() {
     this.checkToken();
-    return this._http.get('https://api.spotify.com/v1/me', { headers: this.headers });
+    return new Promise((resolve, reject) => {
+      this._http.get('https://api.spotify.com/v1/me', { headers: this.headers }).subscribe(
+        (res) => resolve(res),
+        (err) => reject(err));
+    });
   }
 
   /*
   * Obtains all of a selected user's public playlists
   * @param {}
-  * @return {Observable}
+  * @return {Promise}
   */
   getUserPlaylists() {
     this.checkToken();
-    // return this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers }).map(res => res.json());
-    return this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers });
+    return new Promise((resolve, reject) => {
+      this._http.get('https://api.spotify.com/v1/me/playlists', { headers: this.headers }).subscribe(
+        (res) => resolve(res['items']),
+        (err) => reject(err));
+    });
   }
 
   /*
@@ -169,7 +164,6 @@ export class SpotifyService {
   */
   getSongs(user_id, playlist_id) {
     this.checkToken();
-
     return this._http.get('https://api.spotify.com/v1/users/' + user_id + '/playlists/' + playlist_id + '/tracks', {
       headers: this.headers
     });
@@ -178,22 +172,23 @@ export class SpotifyService {
   /*
   * Obtains all of a user's devices connected to spotify connect
   * @param {Number} a number between 0-100 representing volume percent
-  * @return {Observable}
+  * @return {Promise}
   */
-  getDevices() {
+  getDevices(): Promise<any> {
     this.checkToken();
-    return this._http.get('https://api.spotify.com/v1/me/player/devices', {
-      headers: this.headers
-    }).subscribe(
-      res => {
-        console.log(res['devices']);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    return new Promise((resolve, reject) => {
+      this._http.get('https://api.spotify.com/v1/me/player/devices', {
+        headers: this.headers
+      }).subscribe(
+        res => resolve(res['devices']),
+        err => reject(err)
+      );
+    });
   }
 
+  /**
+   * Throws an error if user is not initialized
+   */
   checkToken() {
     if (!this.token) {
       throw new Error('User not initialized');

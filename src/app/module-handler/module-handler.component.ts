@@ -6,7 +6,7 @@ import $ from 'jquery';
 @Component({
   selector: 'app-module-handler',
   templateUrl: './module-handler.component.html',
-  styleUrls: ['./module-handler.component.css']
+  styleUrls: ['./module-handler.component.scss']
 })
 
 export class ModuleHandlerComponent implements OnInit {
@@ -31,11 +31,13 @@ export class ModuleHandlerComponent implements OnInit {
       const storageHolder = this._localStorage.getStorageJSON('moduleList');
       console.log(storageHolder);
 
-      if (!storageHolder) {
+      if (!storageHolder) { // Cache not found
+        console.log('Cache not found');
         const holder = this.generateModuleTemplates(this.linkedModules);
         this.moduleList = holder.moduleList;
         this._localStorage.setStorage('moduleList', holder);
-      } else {
+      } else { // Cache found
+        console.log('Cache found');
         this.moduleList = storageHolder['moduleList'];
       }
     } else { // use default values
@@ -164,23 +166,21 @@ export class ModuleHandlerComponent implements OnInit {
     if (this.settingsVisible) {
       anime.timeline()
         .add({
-          targets: '#settingContainer',
+          targets: '.content',
           height: 0,
-          easing: 'easeOutExpo',
-          duration: 300
-        }).add({
-          targets: '.controller',
-          // opacity: 0.4,
-          width: $('.gearSymbol').width(),
-          duration: 150,
-          easing: 'easeOutExpo'
+          duration: 100,
+          easing: 'easeInExpo'
         }).add({
           targets: '.gearSymbol',
           translateX: 0,
           rorate: '2turn',
           duration: 150,
-          easing: 'easeOutExpo',
-          offset: -150
+          easing: 'easeOutExpo'
+        }).add({
+          targets: '.controller',
+          width: $('.gearSymbol').width(),
+          duration: 150,
+          easing: 'easeOutExpo'
         }).finished.then(() => {
           this.settingsVisible = false;
           this.panelAnimation = false;

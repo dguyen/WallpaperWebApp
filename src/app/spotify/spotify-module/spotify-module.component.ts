@@ -28,25 +28,25 @@ export class SpotifyModuleComponent implements OnInit {
 
   // Todo: Highlighting song if currently being played
   highlight(evt) {
-    console.log(evt);
+    // console.log(evt);
   }
 
   initialize() {
-    this._spotifyService.getUserProfile().subscribe(
-      res => {
-        console.log('--');
-        console.log(res);
-        this.userProfile = res;
-        this.changeHeaderText('Welcome ' + res['id']);
-      },
-      err => console.log(err));
+    this._spotifyService.getUserProfile().then((profile) => {
+      this.userProfile = profile;
+      this.changeHeaderText('Welcome ' + profile['id']);
+    }).catch((err) => {
+      // Todo: Notify user their profile could not be obtained
+      console.log('Profile could not be obtained:' + err);
+    });
 
-    this._spotifyService.getUserPlaylists().subscribe(
-      res => {
-        this.playlists = res['items'];
-        this.changeView('playlistView');
-      },
-      err => console.log(err));
+    this._spotifyService.getUserPlaylists().then((playlists) => {
+      this.playlists = playlists;
+      this.changeView('playlistView');
+    }).catch((err) => {
+      // Todo: Notify user playlists could not be obtained
+      console.log('Playlists could not be obtained:' + err);
+    });
   }
 
   changeView(view) {
