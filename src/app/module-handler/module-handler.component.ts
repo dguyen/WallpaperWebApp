@@ -75,7 +75,7 @@ export class ModuleHandlerComponent implements OnInit {
 
   loadSettings(moduleData) {
     const moduleRef = $('#' + moduleData.id);
-    $('.settings').children('.range-slider').each(function () {
+    $('.moduleSettings').children('.range-slider').each(function () {
       const id = $(this).attr('id');
       const range = $(this).children('.range-slider__range');
       const value = $(this).children('.range-slider__value');
@@ -136,104 +136,100 @@ export class ModuleHandlerComponent implements OnInit {
 
   selectModule(moduleObject) {
     this.loadSettings(moduleObject);
-    this.changeView('content', 'settings');
-    console.log('changing view');
-  }
-
-  changeView(fromView, toView) {
-    anime({
-      targets: '.' + fromView,
-      height: 0,
-      easing: 'easeOutExpo',
-      duration: 500
-    }).finished.then(() => {
-      this.currentView = toView;
-      anime({
-        targets: '.' + toView,
-        height: [0, 450],
-        easing: 'easeOutExpo',
-        duration: 650
-      });
-    });
+    this.openModuleSettings();
   }
 
   togglePanel() {
-    if (this.panelAnimation) {
-      return;
-    }
+    if (this.panelAnimation) { return; }
     this.panelAnimation = true;
 
-    if (this.settingsVisible) {
-      anime.timeline()
-        .add({
-          targets: '.content',
-          height: 0,
-          duration: 100,
-          easing: 'easeInExpo'
-        }).add({
-          targets: '.gearSymbol',
-          translateX: 0,
-          rorate: '2turn',
-          duration: 150,
-          easing: 'easeOutExpo'
-        }).add({
-          targets: '.controller',
-          width: $('.gearSymbol').width(),
-          duration: 150,
-          easing: 'easeOutExpo'
-        }).finished.then(() => {
-          this.settingsVisible = false;
-          this.panelAnimation = false;
-          this.currentView = 'minimizedView';
-        });
-    } else {
-      anime.timeline().add({
-        targets: '.controller',
-        opacity: 0.8,
-        width: 300,
-        easing: 'easeOutExpo',
-        duration: 150
-      }).add({
-        targets: '.gearSymbol',
-        translateX: [300 - $('.gearSymbol').width() - 4],
-        easing: 'easeOutExpo',
-        rotate: '2turn',
-        duration: 150,
-        offset: -150
-      }).add({
-        targets: '.content',
-        height: [0, 45 * this.moduleList.length],
-        easing: 'easeOutExpo'
-      }).finished.then(() => {
+    if (this.settingsVisible) { // Close menu
+      this.closeModuleList().then(() => {
+        this.settingsVisible = false;
+        this.panelAnimation = false;
+      });
+    } else { // Open menu
+      this.openModuleList().then(() => {
         this.settingsVisible = true;
         this.panelAnimation = false;
-        this.currentView = 'moduleSelectionView';
-        this.changeView('.content', '.content');
       });
     }
   }
 
-  initAnimations() {
-    // Spinning animation for gear icon
-    const spinGear = anime({
-      targets: '.gearSymbol',
-      rotate: 360,
-      duration: 1000,
-      easing: 'linear',
-      loop: true,
-      autoplay: false
-    });
+  /*
+  * Open the module list
+  * @return {Promise} that resolves when animation completes
+  */
+  openModuleList() {
+    return anime.timeline().add({
+      targets: '.controller',
+      easing: 'easeOutExpo',
+      duration: '250',
+      width: '300px',
+      height: 45 * (this.moduleList.length + 1) + 17.5,
+      opacity: 1,
+    }).add({
+      targets: '.moduleList',
+      easing: 'easeOutExpo',
+      duration: '250',
+      offset: 0,
+      height: 45 * this.moduleList.length
+    }).add({
+      targets: '.gearContainer',
+      duration: '250',
+      offset: '0',
+      rotate: '3turn'
+    }).finished;
+  }
 
-    // Play and pause spin animation when hover/unhover
-    $('.gearSymbol').hover(() => {
-      spinGear.play();
-    }, () => {
-      spinGear.pause();
-      anime({
-        targets: '.gearSymbol',
-        rotate: '360',
-        easing: 'easeOutExpo',
-      });
-    });
+  /*
+  * Closes the module list
+  * @return {Promise} that resolves when animation completes
+  */
+  closeModuleList() {
+    return anime.timeline().add({
+      targets: '.controller',
+      easing: 'easeOutExpo',
+      duration: '200',
+      width: '44px',
+      height: '44px',
+      opacity: 0.4
+    }).add({
+      targets: '.moduleList, .moduleSettings',
+      easing: 'easeOutExpo',
+      duration: 0,
+      offset: 0,
+      height: 0
+    }).add({
+      targets: '.gearContainer',
+      duration: '200',
+      offset: '0',
+      rotate: '-3turn'
+    }).finished;
+  }
+
+  /*
+  * Open the module settings
+  * @return {Promise} that resolves when animation completes
+  */
+  openModuleSettings() {
+    const settingHeight = 200;
+    return anime.timeline().add({
+      targets: '.moduleList',
+      duration: 0,
+      height: 0
+    }).add({
+      targets: '.moduleSettings',
+      easing: 'easeOutExpo',
+      duration: '250',
+      offset: 0,
+      height: settingHeight
+    }).add({
+      targets: '.controller',
+      easing: 'easeOutExpo',
+      duration: '250',
+      offset: 0,
+      height: settingHeight + 62.5
+    }).finished;
   }
 }

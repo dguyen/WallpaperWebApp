@@ -1,15 +1,18 @@
 <div class='wholePage'>	
 	<div class='controller'>
-		<div class='gearSymbol' (click)='togglePanel()'>&#x2699;</div>
+		<div class='gearContainer' (click)='togglePanel()'>
+			<img id="gearIcon" src="../../assets/img/baseline_settings_white_18dp.png">
+		</div>
+
 		<div id='settingContainer'>	
-			<div class='content'>
+			<div class='moduleList'>
 				<ul>
 					<li *ngFor='let module of moduleList'
 						(click)='selectModule(module)'>
 					{{ module.name }}</li>
 				</ul>
 			</div>
-			<div class="settings">
+			<div class="moduleSettings">
 				<div class="checkbox">
 					<label><input class='enableCheckbox' type="checkbox" value="">Enable Module</label>
 				</div>
