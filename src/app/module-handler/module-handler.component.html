@@ -20,16 +20,16 @@
 			<div class="moduleSettings">
 				<div class="range-slider" id="xController">
 					<label>X Position</label>
-					<input class="range-slider__range" type="range" value="50" min="0" max="100">
-					<span class="range-slider__value">0</span>
+					<input class="range-slider__range" [(ngModel)]="selectedModule.xPos" (ngModelChange)="updateModuleUI(selectedModule)" (change)="onModuleChange()" type="range" min="0" max="{{ getScreenWidth() }}">
+					<span class="range-slider__value">{{ selectedModule.xPos }}</span>
 				</div> 
 				<div class="range-slider" id="yController">
 					<label>Y Position</label>
-					<input class="range-slider__range" type="range" value="50" min="0" max="100">
-					<span class="range-slider__value">0</span>
-				</div> 
+					<input class="range-slider__range" [(ngModel)]="selectedModule.yPos" (ngModelChange)="updateModuleUI(selectedModule)" (change)="onModuleChange()" type="range" min="0" max="{{ getScreenHeight() }}">
+					<span class="range-slider__value">{{ selectedModule.yPos }}</span>
+				</div>				
 				<div class="checkbox">
-					<label><input class='enableCheckbox' type="checkbox" value="">Enable Module</label>
+					<label><input class='enableCheckbox' type="checkbox" [(ngModel)]="selectedModule.enabled" (change)="onModuleChange()">Enable {{ selectedModule.name }} module</label>
 				</div>
 			</div>		
 		</div>

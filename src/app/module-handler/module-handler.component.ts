@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../_services/storage.service';
+import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
+import { Module } from '../_services/module-storage/module';
 import anime from 'animejs';
-import $ from 'jquery';
 
 @Component({
   selector: 'app-module-handler',
@@ -13,13 +13,14 @@ export class ModuleHandlerComponent implements OnInit {
   settingsVisible = false;
   animationRunning = false;
   showBackButton = false;
+  selectedModule = new Module;
   moduleList = [];
   linkedModules = [
     'weather',
     'spotify'
   ];
 
-  constructor(private _localStorage: StorageService) { }
+  constructor(public _moduleStorage: ModuleStorageService) { }
 
   ngOnInit() {
     this.loadStorage();
@@ -27,118 +28,57 @@ export class ModuleHandlerComponent implements OnInit {
   }
 
   loadStorage() {
-    if (typeof (Storage) !== 'undefined') {
-      const storageHolder = this._localStorage.getStorageJSON('moduleList');
-      console.log(storageHolder);
+    const storageHolder = this._moduleStorage.getModules();
 
-      if (!storageHolder) { // Cache not found
-        console.log('Cache not found');
-        const holder = this.generateModuleTemplates(this.linkedModules);
-        this.moduleList = holder.moduleList;
-        this._localStorage.setStorage('moduleList', holder);
-      } else { // Cache found
-        console.log('Cache found');
-        this.moduleList = storageHolder['moduleList'];
-      }
-    } else { // use default values
-      console.log('no storage found');
+    if (!storageHolder) { // Cache not found
+      this._moduleStorage.setupStorage(this.linkedModules);
+      this.moduleList = this._moduleStorage.getModules();
+    } else { // Cache found
+      this.moduleList = storageHolder;
     }
   }
 
+  /**
+   * Initializes the loaded modules
+   * @param modules list of modules
+   */
   initModules(modules) {
     modules.forEach(moduleItem => {
-      const moduleRef = $('#' + moduleItem.id);
-
-      moduleRef.css({ 'top': moduleItem.yPos });
-      moduleRef.css({ 'left': moduleItem.xPos });
-      if (moduleItem.enabled) {
-        moduleRef.css({ 'display': 'inline-block' });
-      } else {
-        moduleRef.style.display = 'none';
-      }
+      this.updateModuleUI(moduleItem);
     });
   }
 
-  generateModuleTemplates(listOfModules) {
-    listOfModules.forEach(i => {
-      const holder = {
-        name: listOfModules[i],
-        id: listOfModules[i] + 'Module',
-        xPos: 300,
-        yPos: 300,
-        enabled: false
-      };
-      this.moduleList.push(holder);
-    });
-    return { moduleList: this.moduleList };
+  /**
+   * Fires when the properties of a module changes
+   */
+  onModuleChange() {
+    this._moduleStorage.updateModule(this.selectedModule);
+    this.updateModuleUI(this.selectedModule);
   }
 
-  loadSettings(moduleData) {
-    const moduleRef = $('#' + moduleData.id);
-    $('.moduleSettings').children('.range-slider').each(function () {
-      const id = $(this).attr('id');
-      const range = $(this).children('.range-slider__range');
-      const value = $(this).children('.range-slider__value');
-      let max = 0;
-      let currValue = 0;
-      let marginType = '';
-
-      if (id === 'xController') {
-        max = $(window).width();
-        currValue = moduleData.xPos;
-        marginType = 'left';
-      } else if (id === 'yController') {
-        max = $(window).height();
-        currValue = moduleData.yPos;
-        marginType = 'top';
-      }
-
-      // Change default values of slider
-      range.attr('max', max);
-      range.attr('value', currValue);
-      value.html(currValue);
-
-      // Remove and previous listeners and add the necessary one
-      range.off('input');
-      range.on('input', function () {
-        $(this).next(value).html(this.value);
-        const cssSetting = {};
-        cssSetting[marginType] = this.value + 'px';
-        $(moduleRef).css(cssSetting);
-
-        if (id === 'xController') {
-          moduleData.xPos = this.value;
-        } else {
-          moduleData.yPos = this.value;
-        }
-        // ---------- update storage and moduleDate
-      });
-    });
-
-    if (moduleData.enabled) {
-      $('.enableCheckbox').attr('checked', true);
-    } else {
-      $('.enableCheckbox').attr('checked', false);
-    }
-
-    // Remove and previous listeners and add the necessary one
-    $('input:checkbox').off('change');
-    $('input:checkbox').change(function () {
-      if ($(this).is(':checked')) {
-        $(moduleRef).css({ display: 'inline-block' });
-        moduleData.enabled = true;
-      } else {
-        moduleRef.css({ 'display': 'none' });
-        moduleData.enabled = false;
-      }
-    });
+  /**
+   * Update the properties of the selected module
+   * @param newValue new module values
+   */
+  updateModuleUI(newValue: Module) {
+    const moduleRef = document.getElementById(newValue.id);
+    moduleRef.style.display = newValue.enabled ? 'inline-block' : 'none';
+    moduleRef.style.top = newValue.yPos + 'px';
+    moduleRef.style.left = newValue.xPos + 'px';
   }
 
-  selectModule(moduleObject) {
-    this.loadSettings(moduleObject);
+  /**
+   * Displays the properties of the selected module
+   * @param moduleData data of selected module
+   */
+  selectModule(moduleData) {
+    this.selectedModule = moduleData;
     this.openModuleSettings();
   }
 
+  /**
+   * Toggle the settings panel visiblity
+   */
   togglePanel() {
     if (this.animationRunning) { return; }
     this.showBackButton = false;
@@ -277,5 +217,19 @@ export class ModuleHandlerComponent implements OnInit {
       this.animationRunning = false;
       this.openModuleList();
     });
+  }
+
+  /**
+   * Returns the screen width in pixels
+   */
+  getScreenWidth() {
+    return screen.width;
+  }
+
+  /**
+   * Returns the screen height in pixels
+   */
+  getScreenHeight() {
+    return screen.height;
   }
 }
