@@ -1,7 +1,12 @@
 <div class='wholePage'>	
 	<div class='controller'>
-		<div class='gearContainer' (click)='togglePanel()'>
-			<img id="gearIcon" src="../../assets/img/baseline_settings_white_18dp.png">
+		<div id="header">
+			<div class='gearContainer' (click)='togglePanel()'>
+				<img id="gearIcon" src="../../assets/img/baseline_settings_white_18dp.png">
+			</div>
+			<div class='backContainer' *ngIf="showBackButton" (click)='goBack()'>
+				<img id="backIcon" src="../../assets/img/baseline_arrow_back_ios_white_18dp.png">
+			</div>	
 		</div>
 
 		<div id='settingContainer'>	
@@ -13,9 +18,6 @@
 				</ul>
 			</div>
 			<div class="moduleSettings">
-				<div class="checkbox">
-					<label><input class='enableCheckbox' type="checkbox" value="">Enable Module</label>
-				</div>
 				<div class="range-slider" id="xController">
 					<label>X Position</label>
 					<input class="range-slider__range" type="range" value="50" min="0" max="100">
@@ -26,6 +28,9 @@
 					<input class="range-slider__range" type="range" value="50" min="0" max="100">
 					<span class="range-slider__value">0</span>
 				</div> 
+				<div class="checkbox">
+					<label><input class='enableCheckbox' type="checkbox" value="">Enable Module</label>
+				</div>
 			</div>		
 		</div>
 	</div>

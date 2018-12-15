@@ -22,27 +22,34 @@ $background-color: #0d0d0d;
 	height: 44px;
 	border-radius: 17.5px;
 	z-index: 5;
-	// color: white;
 
-	.gearContainer {
-		height: 40px;
-		width: 40px;
-		margin: 2px;
-		float: left;
+	#header {
+		.gearContainer {
+			float: left;
+			height: 44px;
+			width: 44px;
+			margin: auto;
+		}
 
 		#gearIcon {
 			width: inherit;
 			height: inherit;
-			opacity: 1;
 		}
-	}
-	
-	.gearContainer:hover {
-		color: #cccccc;
-	}
-	
-	.gearContainer:active {
-		color: #808080;
+
+		#backIcon {
+			width: 36px;
+			height: 33px;
+			padding-left: 10px;
+			padding-top: 6px;
+		}
+
+		.backContainer {
+			position: absolute;
+			width: 44px;
+			width: fit-content;
+			height: 44px;
+			left: 0;
+		}
 	}
 }
 
@@ -81,13 +88,7 @@ $background-color: #0d0d0d;
 	}
 }
 
-#spotifyModule {
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-
-#weatherModule {
+#spotifyModule, #weatherModule {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -96,59 +97,57 @@ $background-color: #0d0d0d;
 .moduleSettings {
 	overflow: hidden;
 	padding: 0 1em 0 1em;
-}
 
-#bodyContainer {
-	display: inline-block;
-	width: inherit;
-	overflow: hidden;
+	.checkbox {
+		text-align: center;
+	}
 }
 
 .range-slider {
-	margin-top: 10px;
+	margin: 10px 0 10px 0;
 	width: 275px;
-    display: flex;
+	display: flex;
 }
 
 .range-slider__range {
-    -webkit-appearance: none;
-    margin-top: 10px;
-    float: left;
-    width: 400px;
-    height: 10px;
-    border-radius: 5px;
-    background: #d7dcdf;
-    outline: none;
+	-webkit-appearance: none;
+	margin-top: 10px;
+	float: left;
+	width: 400px;
+	height: 10px;
+	border-radius: 5px;
+	background: #d7dcdf;
+	outline: none;
 }
 
 .range-slider__range::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #2c3e50;
-    cursor: pointer;
-    transition: background 0.15s ease-in-out;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #2c3e50;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
 }
 
 .range-slider__range::-webkit-slider-thumb:hover {
-    background: #1abc9c;
+	background: #1abc9c;
 }
 
 .range-slider__range:active::-webkit-slider-thumb {
-    background: #1abc9c;
+	background: #1abc9c;
 }
 
 .range-slider__value {
-    display: inline-block;
-    position: relative;
-    width: 60px;
-    height: 30px;
-    color: #fff;
-    line-height: 20px;
-    text-align: center;
-    border-radius: 3px;
-    background: #2c3e50;
-    padding: 5px 10px;
-    margin-left: 5px;
+	display: inline-block;
+	position: relative;
+	width: 60px;
+	height: 30px;
+	color: #fff;
+	line-height: 20px;
+	text-align: center;
+	border-radius: 3px;
+	background: #2c3e50;
+	padding: 5px 10px;
+	margin-left: 5px;
 }

@@ -11,8 +11,8 @@ import $ from 'jquery';
 
 export class ModuleHandlerComponent implements OnInit {
   settingsVisible = false;
-  panelAnimation = false;
-  currentView = 'minimizedView';
+  animationRunning = false;
+  showBackButton = false;
   moduleList = [];
   linkedModules = [
     'weather',
@@ -140,18 +140,15 @@ export class ModuleHandlerComponent implements OnInit {
   }
 
   togglePanel() {
-    if (this.panelAnimation) { return; }
-    this.panelAnimation = true;
-
+    if (this.animationRunning) { return; }
+    this.showBackButton = false;
     if (this.settingsVisible) { // Close menu
       this.closeModuleList().then(() => {
         this.settingsVisible = false;
-        this.panelAnimation = false;
       });
     } else { // Open menu
       this.openModuleList().then(() => {
         this.settingsVisible = true;
-        this.panelAnimation = false;
       });
     }
   }
@@ -161,6 +158,8 @@ export class ModuleHandlerComponent implements OnInit {
   * @return {Promise} that resolves when animation completes
   */
   openModuleList() {
+    if (this.animationRunning) { return; }
+    this.animationRunning = true;
     return anime.timeline().add({
       targets: '.controller',
       easing: 'easeOutExpo',
@@ -178,8 +177,13 @@ export class ModuleHandlerComponent implements OnInit {
       targets: '.gearContainer',
       duration: '250',
       offset: '0',
-      rotate: '3turn'
-    }).finished;
+      rotate: '3turn',
+    }).add({
+      targets: '.backContainer',
+      duration: 50,
+      offset: 0,
+      opacity: 0
+    }).finished.then(() => this.animationRunning = false);
   }
 
   /*
@@ -187,6 +191,8 @@ export class ModuleHandlerComponent implements OnInit {
   * @return {Promise} that resolves when animation completes
   */
   closeModuleList() {
+    if (this.animationRunning) { return; }
+    this.animationRunning = true;
     return anime.timeline().add({
       targets: '.controller',
       easing: 'easeOutExpo',
@@ -204,8 +210,8 @@ export class ModuleHandlerComponent implements OnInit {
       targets: '.gearContainer',
       duration: '200',
       offset: '0',
-      rotate: '-3turn'
-    }).finished;
+      rotate: '-1turn'
+    }).finished.then(() => this.animationRunning = false);
   }
 
   /*
@@ -213,7 +219,10 @@ export class ModuleHandlerComponent implements OnInit {
   * @return {Promise} that resolves when animation completes
   */
   openModuleSettings() {
-    const settingHeight = 200;
+    if (this.animationRunning) { return; }
+    this.animationRunning = true;
+    this.showBackButton = true;
+    const settingHeight = 150;
     return anime.timeline().add({
       targets: '.moduleList',
       duration: 0,
@@ -221,15 +230,52 @@ export class ModuleHandlerComponent implements OnInit {
     }).add({
       targets: '.moduleSettings',
       easing: 'easeOutExpo',
-      duration: '250',
+      duration: 250,
       offset: 0,
       height: settingHeight
     }).add({
       targets: '.controller',
       easing: 'easeOutExpo',
-      duration: '250',
+      duration: 250,
       offset: 0,
       height: settingHeight + 62.5
-    }).finished;
+    }).add({
+      targets: '.backContainer',
+      easing: 'easeOutExpo',
+      duration: 150,
+      offset: 0,
+      opacity: 1
+    }).add({
+      targets: '.gearContainer',
+      duration: 250,
+      easing: 'easeOutExpo',
+      offset: 0,
+      translateX: 255,
+      rotate: '3turn'
+    }).finished.then(() => this.animationRunning = false);
+  }
+
+  /*
+  * Go back from module settings to module list
+  * @return {Promise} that resolves when animation completes
+  */
+  goBack() {
+    if (this.animationRunning) { return; }
+    this.animationRunning = true;
+    this.showBackButton = false;
+    return anime.timeline().add({
+      targets: '.moduleSettings',
+      easing: 'easeOutExpo',
+      duration: 50,
+      height: 0
+    }).add({
+      targets: '.gearContainer',
+      duration: 50,
+      offset: 0,
+      translateX: -255,
+    }).finished.then(() => {
+      this.animationRunning = false;
+      this.openModuleList();
+    });
   }
 }
