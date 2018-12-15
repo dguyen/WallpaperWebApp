@@ -4,36 +4,46 @@ import { Injectable } from '@angular/core';
 export class StorageService {
 
   constructor() {
-    if (typeof (Storage) !== 'undefined') {
-      console.log('storage found');
-    } else {
-      console.log('no storage found');
+    if (typeof (Storage) === 'undefined') {
+      throw new Error('Storage not found');
     }
   }
 
+  /**
+   * Retrieve stored data in JSON format
+   * @param key key of data to retrieve
+   */
   getStorageJSON(key: string) {
-    let value = localStorage.getItem(key);
-    if (!value) {
-      return null;
-    }
-
+    const value = localStorage.getItem(key);
     try {
-      value = JSON.parse(value);
+      return JSON.parse(value) ? JSON.parse(value) : null;
     } catch (err) {
       return null;
     }
-    return value;
   }
 
+  /**
+   * Retrieve stored data in string format
+   * @param key key of data to retrieve
+   */
   getStorageString(key: string) {
     const value = localStorage.getItem(key);
     return !value ? null : value;
   }
 
+  /**
+   * Store data into storage
+   * @param key key of data to store
+   * @param value data to store
+   */
   setStorage(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
+  /**
+   * Delete data related to the key given
+   * @param key key of data to delete
+   */
   deleteStorage(key) {
     localStorage.removeItem(key);
   }
