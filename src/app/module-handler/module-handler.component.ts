@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
 import { Module } from '../_services/module-storage/module';
-import anime from 'animejs';
+import * as anime from 'animejs';
 
 @Component({
   selector: 'app-module-handler',
@@ -103,20 +103,20 @@ export class ModuleHandlerComponent implements OnInit {
     return anime.timeline().add({
       targets: '.controller',
       easing: 'easeOutExpo',
-      duration: '250',
+      duration: 250,
       width: '300px',
       height: 45 * (this.moduleList.length + 1) + 17.5,
       opacity: 1,
     }).add({
       targets: '.moduleList',
       easing: 'easeOutExpo',
-      duration: '250',
+      duration: 250,
       offset: 0,
       height: 45 * this.moduleList.length
     }).add({
       targets: '.gearContainer',
-      duration: '250',
-      offset: '0',
+      duration: 250,
+      offset: 0,
       rotate: '3turn',
     }).add({
       targets: '.backContainer',
@@ -136,7 +136,7 @@ export class ModuleHandlerComponent implements OnInit {
     return anime.timeline().add({
       targets: '.controller',
       easing: 'easeOutExpo',
-      duration: '200',
+      duration: 200,
       width: '44px',
       height: '44px',
       opacity: 0.4
@@ -148,8 +148,8 @@ export class ModuleHandlerComponent implements OnInit {
       height: 0
     }).add({
       targets: '.gearContainer',
-      duration: '200',
-      offset: '0',
+      duration: 200,
+      offset: 0,
       rotate: '-1turn'
     }).finished.then(() => this.animationRunning = false);
   }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../_services/spotify.service';
-import anime from 'animejs';
-import $ from 'jquery';
+import * as anime from 'animejs';
 
 @Component({
   selector: 'app-spotify-module',
@@ -34,7 +33,6 @@ export class SpotifyModuleComponent implements OnInit {
   initialize() {
     this._spotifyService.getUserProfile().then((profile) => {
       this.userProfile = profile;
-      this.changeHeaderText('Welcome ' + profile['id']);
     }).catch((err) => {
       // Todo: Notify user their profile could not be obtained
       console.log('Profile could not be obtained:' + err);
@@ -116,54 +114,5 @@ export class SpotifyModuleComponent implements OnInit {
 
   seek(method: string) {
     this._spotifyService.mediaSeek(method);
-  }
-
-  changeHeaderText(newText: string) {
-    $('#headerLetters').each(function () {
-      $(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, '<span id=headerLetters>$&</span>'));
-    });
-    anime({
-      targets: '#headerLetters',
-      scaleX: [1, 0],
-      opacity: [1, 0],
-      duration: 500,
-      easing: 'easeOutExpo'
-    }).finished.then(() => {
-      $('#headerLetters').text(newText);
-      $('#headerLetters').each(function () {
-        $(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, '<span id=headerLetters>$&</span>'));
-      });
-
-      anime.timeline().add({
-        targets: '#line',
-        scaleY: [0, 1],
-        opacity: [0.5, 1],
-        easing: 'easeOutExpo',
-        duration: 700,
-      })
-      .add({
-        targets: '#line',
-        translateX: [0, $('#headerLetters').width()],
-        easing: 'easeOutExpo',
-        duration: 700,
-        delay: 100
-      }).add({
-        targets: '#headerLetters',
-        opacity: [0, 1],
-        easing: 'easeOutExpo',
-        duration: 600,
-        offset: '-=775',
-        delay: function (el, i) {
-          return 34 * (i + 1);
-        }
-      }).add({
-        targets: '#line',
-        translateX: [$('#headerLetters').width()],
-        scaleY: [1, 0],
-        opacity: [1, 0],
-        easing: 'easeOutExpo',
-        duration: 700
-      });
-    });
   }
 }

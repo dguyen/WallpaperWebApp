@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { WeatherService } from '../_services/weather.service';
-import anime from 'animejs';
+import * as anime from 'animejs';
 
 @Component({
   selector: 'app-weather-module',
