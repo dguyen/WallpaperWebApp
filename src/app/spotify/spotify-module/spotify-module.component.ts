@@ -93,7 +93,7 @@ export class SpotifyModuleComponent implements OnInit {
       targets: '#container, #spotifyContainer',
       easing: 'easeOutExpo',
       width: 300,
-      height: 560
+      height: 580
     }).add({
       targets: '#spotifyLogoContainer',
       easing: 'easeOutExpo',
@@ -110,7 +110,7 @@ export class SpotifyModuleComponent implements OnInit {
       targets: '#bodyContainer',
       height: 0,
       easing: 'easeOutExpo',
-      duration: 300
+      duration: 250
     }).finished.then(() => {
       this.currentView = view;
       anime({
