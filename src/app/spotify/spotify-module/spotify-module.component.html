@@ -1,18 +1,21 @@
-<div class="container">
-	<div id="mainContainer">
-		<div id="header">
-			<div id="spotifyLogo" (click)="changeView('playlistView')"> <!-- (click) is temp. rmv later-->
-				<img src="../../assets/img/spotify-logo.png">
-			</div>
+<div id="container">
+	<div id="spotifyLogoContainer"> 
+		<img id="spotifyLogo" src="../../assets/img/spotify/spotify-logo.png">
+	</div>
+	<div id="loading" *ngIf="loading">
+		<div id="loadingTextContainer">
+			{{ loadingText }}
+		</div>
+	</div>
 
-			<div id="headerTitle">
-				<span id="line"></span>
-				<span id="headerLetters"></span>
-			</div>
+	<div id="spotifyContainer">
+		<div id="header">
+			<div id='backContainer' *ngIf="currentView === 'songView'" (click)="changeView('playlistView')">
+				<img id="backIcon" src="../../assets/img/baseline_arrow_back_ios_white_18dp.png">
+			</div>	
 		</div>
 
 		<div id="bodyContainer">			
-			<div id="loading" *ngIf="currentView == 'loadingView'"></div>
 			<div id="playlists" *ngIf="currentView == 'playlistView'">
 				<ul class="list-group">
 					<li
@@ -46,12 +49,13 @@
 			</div>
 		</div>
 
+		<!-- Footer -->
 		<div id="musicController">
 			<div id="musicButtons">
 				<div id='seekBack' (click)="seek('previous')"></div>
 				<div id='playPause' (dbclick)="toggleSong()"></div>
 				<div id='seekNext' (click)="seek('next')"></div>
 			</div>
-		</div> <!-- At the footer of the application -->
+		</div> 
 	</div>
 </div>

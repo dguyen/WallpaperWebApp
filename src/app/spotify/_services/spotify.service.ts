@@ -11,6 +11,13 @@ export class SpotifyService {
   initialized: Promise<any>;
 
   constructor(private _http: HttpClient) {
+    this.connectSpotify();
+  }
+
+  /**
+   * Initialize spotify by attempting to connect to server
+   */
+  connectSpotify() {
     this.initialized = this.initializeTokens();
   }
 

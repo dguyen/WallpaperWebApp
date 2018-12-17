@@ -1,57 +1,75 @@
-#mainContainer {
-	border: 1px solid black;
+$background-color: #0d0d0d;
+
+#container {
+	border-radius: 15px;
+	background-color: $background-color;
 	text-align: center;
-	width: 310px;
-	background-color: rgba(6, 8, 8, 0.7);
+	width: 50px;
 	user-select: none;
+}
+
+#loading {
+	display: flex;
+	align-items: center;
+	width: inherit;
+	height: 50px;
+	color: white;
+
+	#loadingTextContainer {
+		margin-left: 50px;
+		width: 250px;
+
+		#loadingText {
+			vertical-align: middle;
+		}
+	}
+}
+
+#spotifyLogoContainer {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	opacity: 0.8;
+
+	#spotifyLogo {
+		display: block;
+		margin: 10px auto 10px auto;
+		height: 30px;
+		width: 30px;
+	}
+}
+
+#spotifyContainer {
+	height: 0;
+	overflow: hidden;
 }
 
 #header {
 	background-color: rgba(6, 8, 8, 0.8);
 	height: 50px;
+	width: inherit;
 	border-bottom: 1px grey;
-	width: 310px;
-}
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 
-img {
-	height: 30px;
-	width: 30px;
-}
+	#backContainer {
+		float: left;
+		width: 50px;
+		height: 50px;
 
-#spotifyLogo {
-	background-image: url("../../../assets/img/spotify-logo.png");
-	float: left;
-	opacity: 0.8;
-	height: 40px;
-	width: 40px;
-	padding-top: 5px;
-}
-
-#headerTitle {
-	padding-right: 10px;
-	height: inherit;
-	float: right;
-	line-height: 55px;
-	color: #00b300;
-	position: relative;
+		#backIcon {
+			display: block;
+			margin: 10px 5px 10px 15px;
+			height: 30px;
+			width: 30px;
+		}
+	}
 }
 
 #bodyContainer {
 	width: 310px;
-	height: 0px;
-}
-
-#line {
-  opacity: 0;
-  position: absolute;
-  margin-top: 18px;
-  height: 18px;
-  width: 1px;
-  background-color: grey;
-}
-
-#loading {
-	height: 50px;
+	min-height: 440px;
+	height: 440px;
 }
 
 #playlists, #songs{
@@ -68,26 +86,27 @@ ul {
 	padding: 0;
 	margin: 0;
 	list-style-type: none;
+
+	li {
+		text-overflow: ellipsis;
+		text-align: left;
+		font-size: small;
+		white-space: nowrap;
+		position: relative;
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+		height: 45px;
+		border-bottom: 1px solid grey;
+		transition: background-color 0.1s;
+	}
+	
+	li:hover {
+		background-color: #1a1a1a;
+		opacity: 0.85;
+		transition: background-color 0s;
+	}
 }
 
-li {
-	text-overflow: ellipsis;
-	text-align: left;
-	font-size: small;
-	white-space: nowrap;
-	position: relative;
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
-	height: 45px;
-	border-bottom: 1px solid grey;
-	transition: background-color 0.1s;
-}
-
-li:hover {
-	background-color: #1a1a1a;
-	opacity: 0.85;
-	transition: background-color 0s;
-}
 
 #playlistName {
 	color: #cccccc;
@@ -141,25 +160,27 @@ li:hover {
 	text-align: center;
 }
 
+// Footer
 #musicController {
-	/*display: none;*/
-	height: 55px;
+	height: 60px;
 	width: inherit;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
 	background-color: rgba(6, 8, 8, 0.8);
-}
 
-#musicButtons {
-	height: inherit;
-	margin: 0px auto;
-	display: inline-block;
-}
-
-#seekBack , #seekNext, #playPause{
-	background-repeat: no-repeat;
-	background-position: center;
-	float: left;
-	height: inherit;
-	width: 45px;
+	#musicButtons {
+		height: inherit;
+		margin: 0px auto;
+		display: inline-block;
+		
+		#seekBack , #seekNext, #playPause{
+			background-repeat: no-repeat;
+			background-position: center;
+			float: left;
+			height: inherit;
+			width: 45px;
+		}
+	}
 }
 
 /* Obtain correct asset later*/
