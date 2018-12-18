@@ -201,4 +201,57 @@ export class SpotifyService {
       throw new Error('User not initialized');
     }
   }
+
+  /**
+   * Retrieves data about the status of the current player
+   * @return a promise that either resolves with a set of data representing the player, or rejects with an error
+   */
+   getPlayerData(): Promise<any> {
+    this.checkToken();
+    return new Promise((resolve, reject) => {
+      this._http.get('https://api.spotify.com/v1/me/player', {
+        headers: this.headers
+      }).subscribe(
+        res => resolve(res),
+        err => reject(err)
+      );
+    });
+  }
+
+  /**
+   * Set the shuffle state of the media player
+   * @param newState true to set shuffle on false to set toggle off
+   */
+  setShuffle(newState: boolean): Promise<any> {
+    this.checkToken();
+    return new Promise((resolve, reject) => {
+      this._http.put('https://api.spotify.com/v1/me/player/shuffle', {}, {
+        headers: this.headers,
+        params: new HttpParams().set('state', newState.toString())
+      }).subscribe(
+        res => resolve(res),
+        err => reject(err)
+      );
+    });
+  }
+
+  /**
+   * Set the replay state of the media player
+   * @param newState the new state of replay ('off', 'context', 'track')
+   */
+  setReplay(newState: string): Promise<any> {
+    if (newState !== 'off' && newState !== 'context' && newState !== 'track') {
+      throw new Error('Invalid view');
+    }
+    this.checkToken();
+    return new Promise((resolve, reject) => {
+      this._http.put('https://api.spotify.com/v1/me/player/repeat', {}, {
+        headers: this.headers,
+        params: new HttpParams().set('state', newState)
+      }).subscribe(
+        res => resolve(res),
+        err => reject(err)
+      );
+    });
+  }
 }

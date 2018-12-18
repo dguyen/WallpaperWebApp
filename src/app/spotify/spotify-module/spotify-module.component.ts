@@ -15,6 +15,9 @@ export class SpotifyModuleComponent implements OnInit {
   userProfile: any;
   selectedPlaylist: any;
   currentView = 'loadingView';
+  repeatState = 'off';
+  isShuffle = false;
+  isPlaying = false;
 
   constructor(private _spotifyService: SpotifyService) {
     this.initialize();
@@ -65,8 +68,19 @@ export class SpotifyModuleComponent implements OnInit {
   }
 
   loadData() {
+    this.loadPlayerData();
     this.getProfile();
     this.getPlaylists();
+  }
+
+  loadPlayerData() {
+    this._spotifyService.getPlayerData().then((playerData) => {
+      this.isPlaying = playerData['is_playing'];
+      this.repeatState = playerData['repeat_state'];
+      this.isShuffle = playerData['shuffle_state'];
+    }).catch((err) => {
+      throw new Error(err);
+    });
   }
 
   getProfile() {
@@ -131,13 +145,15 @@ export class SpotifyModuleComponent implements OnInit {
       },
       err => {
 
-      });
+      }
+    );
   }
 
   playSong(songUri, albumUri) {
     this._spotifyService.mediaPlaySong(albumUri, songUri).subscribe(
       res => console.log(res),
-      err => console.log(err));
+      err => console.log(err)
+    );
   }
 
   getArtistNames(artists) {
@@ -145,7 +161,7 @@ export class SpotifyModuleComponent implements OnInit {
     artists.forEach(artist => {
       combined += artist.name + ', ';
     });
-    return artists.length > 0 ? combined.slice(0, -3) : combined;
+    return artists.length > 0 ? combined.slice(0, -2) : combined;
   }
 
   getDuration(millis) {
@@ -159,13 +175,59 @@ export class SpotifyModuleComponent implements OnInit {
     return minuteSecond.replace('.', ':');
   }
 
+  /**
+   * Toggle pauses/play on current song
+   */
   toggleSong() {
-    // let tmp = '',
-    // currentlyPlaying = false;
-    // currentlyPlaying ? tmp = 'pause' : tmp = 'play';
-    // this._spotifyService.mediaPausePlay(tmp);
+    const newAction = this.isPlaying ? 'pause' : 'play';
+    this._spotifyService.mediaPausePlay(newAction).then(() => {
+      this.isPlaying = !this.isPlaying;
+    }).catch((err) => {
+      throw new Error(err);
+    });
   }
 
+  /**
+   * Toggle the shuffle media control
+   */
+  toggleShuffle() {
+    this._spotifyService.setShuffle(!this.isShuffle).then(() => {
+      this.isShuffle = !this.isShuffle;
+    }).catch((err) => {
+      throw new Error(err);
+    });
+  }
+
+  /**
+   * Toggle the repeat media control
+   */
+  toggleRepeat() {
+    let newState = '';
+    switch (this.repeatState) {
+      case 'off':
+        newState = 'context';
+        break;
+      case 'context':
+        newState = 'track';
+        break;
+      case 'track':
+        newState = 'off';
+        break;
+      default:
+        return;
+    }
+
+    this.repeatState = newState;
+    this._spotifyService.setReplay(newState).catch((err) => {
+      this.repeatState = 'off';
+      throw new Error(err);
+    });
+  }
+
+  /**
+   * Seek next or previous song
+   * @param method 'next' or 'previous'
+   */
   seek(method: string) {
     this._spotifyService.mediaSeek(method);
   }
