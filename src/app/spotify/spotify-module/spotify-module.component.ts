@@ -19,8 +19,8 @@ export class SpotifyModuleComponent implements OnInit {
   isShuffle = false;
   isPlaying = false;
   currentlyPlaying = {
-    playlistHref: null,
-    songHref: null
+    playlistUri: null,
+    songUri: null
   };
 
   constructor(private _spotifyService: SpotifyService) {
@@ -67,24 +67,23 @@ export class SpotifyModuleComponent implements OnInit {
   }
 
   loadData() {
-    setInterval(() => this.loadPlayerData(), 7500); // Keep spotify player in sync
     this.loadPlayerData();
     this.getProfile();
     this.getPlaylists();
   }
 
   loadPlayerData() {
-    this._spotifyService.getPlayerData().then((playerData) => {
+    this._spotifyService.playerUpdate.subscribe((playerData) => {
       this.isPlaying = playerData['is_playing'];
       this.repeatState = playerData['repeat_state'];
       this.isShuffle = playerData['shuffle_state'];
       if (playerData['context']) {
-        this.currentlyPlaying.playlistHref = playerData['context']['href'];
+        this.currentlyPlaying.playlistUri = playerData['context']['uri'];
       }
       if (playerData['item']) {
-        this.currentlyPlaying.songHref = playerData['item']['href'];
+        this.currentlyPlaying.songUri = playerData['item']['uri'];
       }
-    }).catch((err) => {
+    }, (err) => {
       this._spotifyService.connectSpotify();
       throw new Error(err);
     });
@@ -163,10 +162,12 @@ export class SpotifyModuleComponent implements OnInit {
   }
 
   playSong(songUri: number, albumUri: string) {
-    this._spotifyService.mediaPlaySong(albumUri, songUri).subscribe(
-      () => null,
-      err => { throw new Error(err); }
-    );
+    this._spotifyService.mediaPlaySong(albumUri, songUri).then(() => {
+      this.currentlyPlaying.songUri = songUri;
+      this.currentlyPlaying.playlistUri = albumUri;
+    }).catch((err) => {
+      throw new Error(err);
+    });
   }
 
   /**

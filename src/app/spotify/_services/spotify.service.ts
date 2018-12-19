@@ -1,30 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class SpotifyService {
-  refreshToken = 'AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w';
-  token: string = null;
-  tokenExpiry = 0;
-  currentTime = 0;
-  headers = new HttpHeaders().set('Content-type', 'application/json');
+  private refreshToken = 'AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w';
+  private headers = new HttpHeaders().set('Content-type', 'application/json');
+  private token: string = null;
+  private tokenExpiry = 0;
   initialized: Promise<any>;
+  playerUpdate = new Subject();
 
   constructor(private _http: HttpClient) {
     this.connectSpotify();
+    setInterval(() => this.getPlayerData(), 10000);
   }
 
   /**
    * Initialize spotify by attempting to connect to server
    */
   connectSpotify() {
-    this.initialized = this.initializeTokens();
+    this.initialized = this.initializeTokens().then(() => {
+      this.getPlayerData();
+    }).catch(() => null);
+    return this.initialized;
   }
 
   /*
   * Retrieves an active token by using the refresh token
-  * @param {}
-  * @return {}
   */
   initializeTokens() {
     return new Promise((resolve, reject) => {
@@ -42,6 +45,7 @@ export class SpotifyService {
         },
         err => {
           reject(err);
+          this.initialized = null;
         }
       );
     });
@@ -78,13 +82,17 @@ export class SpotifyService {
   */
   mediaPlaySong(albumUri: string, songUri: number) {
     this.checkToken();
-    return this._http.put('https://api.spotify.com/v1/me/player/play',
-      {
+    return new Promise((resolve, reject) => {
+      this._http.put('https://api.spotify.com/v1/me/player/play', {
         context_uri: albumUri,
         offset: { 'uri': songUri }
-      },
-      { headers: this.headers }
-    );
+      }, {
+        headers: this.headers
+      }).subscribe(() => {
+        resolve();
+        setTimeout(() => this.getPlayerData(), 500);
+      }, (err) => reject(err));
+    });
   }
 
   /*
@@ -98,9 +106,10 @@ export class SpotifyService {
       throw new Error('Invalid input');
     }
     return new Promise((resolve, reject) => {
-      this._http.post('https://api.spotify.com/v1/me/player/' + method, null, { headers: this.headers }).subscribe(
-      () => resolve(),
-      (err) => {
+      this._http.post('https://api.spotify.com/v1/me/player/' + method, null, { headers: this.headers }).subscribe(() => {
+        resolve();
+        setTimeout(() => this.getPlayerData(), 500);
+      }, (err) => {
         if (err.json().status === 403) {
           throw new Error('Media already ' + method + ' or user not premium');
         }
@@ -159,7 +168,7 @@ export class SpotifyService {
   * @param {string} a string reference to the playlist
   * @return {Observable}
   */
-  getSongsUrl(url) {
+  getSongsUrl(url: string) {
     this.checkToken();
     return this._http.get(url, { headers: this.headers });
   }
@@ -169,7 +178,7 @@ export class SpotifyService {
   * @param {string, string} a string with the user id the playlist is from, and a string with the playlist id
   * @return {Observable}
   */
-  getSongs(user_id, playlist_id) {
+  getSongs(user_id: string, playlist_id: string) {
     this.checkToken();
     return this._http.get('https://api.spotify.com/v1/users/' + user_id + '/playlists/' + playlist_id + '/tracks', {
       headers: this.headers
@@ -207,12 +216,19 @@ export class SpotifyService {
    * @return a promise that either resolves with a set of data representing the player, or rejects with an error
    */
    getPlayerData(): Promise<any> {
-    this.checkToken();
+    try { this.checkToken(); } catch (err) { return; }
+    if (!this.initialized) {
+      return;
+    }
+
     return new Promise((resolve, reject) => {
       this._http.get('https://api.spotify.com/v1/me/player', {
         headers: this.headers
       }).subscribe(
-        res => resolve(res),
+        res => {
+          this.playerUpdate.next(res);
+          resolve(res);
+        },
         err => reject(err)
       );
     });
