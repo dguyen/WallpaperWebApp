@@ -161,7 +161,7 @@ ul {
 
 // Footer
 #musicController {
-	height: 80px;
+	height: 90px;
 	width: inherit;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
@@ -169,7 +169,6 @@ ul {
 
 	#musicButtonsContainer {
 		display: flex;
-		margin-top: 5px;
 		justify-content: center;
 		align-items: center;
 		height: inherit;
@@ -210,8 +209,13 @@ ul {
 	}
 }
 
-.listTextColor {
-	color: #00e600;
+.selectedItem {
+	color: #51b951 !important;
+	background-color: #1a1a1a !important;
+
+	* {
+		color: #51b951 !important;
+	}
 }
 
 .buttonSelected {

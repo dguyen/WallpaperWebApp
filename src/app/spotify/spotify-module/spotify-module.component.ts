@@ -18,17 +18,16 @@ export class SpotifyModuleComponent implements OnInit {
   repeatState = 'off';
   isShuffle = false;
   isPlaying = false;
+  currentlyPlaying = {
+    playlistHref: null,
+    songHref: null
+  };
 
   constructor(private _spotifyService: SpotifyService) {
     this.initialize();
   }
 
   ngOnInit() {
-  }
-
-  // Todo: Highlighting song if currently being played
-  highlight(evt) {
-    // console.log(evt);
   }
 
   initialize() {
@@ -68,6 +67,7 @@ export class SpotifyModuleComponent implements OnInit {
   }
 
   loadData() {
+    setInterval(() => this.loadPlayerData(), 7500); // Keep spotify player in sync
     this.loadPlayerData();
     this.getProfile();
     this.getPlaylists();
@@ -78,7 +78,14 @@ export class SpotifyModuleComponent implements OnInit {
       this.isPlaying = playerData['is_playing'];
       this.repeatState = playerData['repeat_state'];
       this.isShuffle = playerData['shuffle_state'];
+      if (playerData['context']) {
+        this.currentlyPlaying.playlistHref = playerData['context']['href'];
+      }
+      if (playerData['item']) {
+        this.currentlyPlaying.songHref = playerData['item']['href'];
+      }
     }).catch((err) => {
+      this._spotifyService.connectSpotify();
       throw new Error(err);
     });
   }
@@ -116,47 +123,57 @@ export class SpotifyModuleComponent implements OnInit {
     }).finished;
   }
 
-  changeView(view) {
+  changeView(view: string) {
     if (view !== 'loadingView' && view !== 'playlistView' && view !== 'songView') {
       throw new Error('Invalid view');
     }
-    anime({
+    this.closeView().then(() => {
+      this.currentView = view;
+      this.openView();
+    });
+  }
+
+  closeView() {
+    return anime({
       targets: '#bodyContainer',
       height: 0,
       easing: 'easeOutExpo',
       duration: 250
-    }).finished.then(() => {
-      this.currentView = view;
-      anime({
-        targets: '#bodyContainer',
-        height: [0, 440],
-        easing: 'easeOutExpo',
-        duration: 350
-      });
+    }).finished;
+  }
+
+  openView() {
+    anime({
+      targets: '#bodyContainer',
+      height: [0, 440],
+      easing: 'easeOutExpo',
+      duration: 300
     });
   }
 
-  selectPlaylist(playlistSelected) {
-    console.log('Playlist: ' + playlistSelected.name);
+  selectPlaylist(playlistSelected: any) {
+    const tmp = this.closeView();
     this._spotifyService.getSongsUrl(playlistSelected.href).subscribe(
       res => {
         this.selectedPlaylist = res;
-        this.changeView('songView');
-      },
-      err => {
-
+        this.currentView = 'songView';
+        tmp.then(() => this.openView());
       }
     );
   }
 
-  playSong(songUri, albumUri) {
+  playSong(songUri: number, albumUri: string) {
     this._spotifyService.mediaPlaySong(albumUri, songUri).subscribe(
-      res => console.log(res),
-      err => console.log(err)
+      () => null,
+      err => { throw new Error(err); }
     );
   }
 
-  getArtistNames(artists) {
+  /**
+   * Returns a concatenated string of artist names
+   * @param artists list of artist objects
+   */
+  getArtistNames(artists: Array<any>) {
     let combined = '';
     artists.forEach(artist => {
       combined += artist.name + ', ';
@@ -164,7 +181,11 @@ export class SpotifyModuleComponent implements OnInit {
     return artists.length > 0 ? combined.slice(0, -2) : combined;
   }
 
-  getDuration(millis) {
+  /**
+   * Converts a time in milliseconds into MM:SS format
+   * @param millis time to convert in milliseconds
+   */
+  getDuration(millis: number) {
     let minuteSecond = (Math.round(millis / 60000 * 100) / 100).toString();
     if (minuteSecond.length === 1) {
       minuteSecond += '.00';

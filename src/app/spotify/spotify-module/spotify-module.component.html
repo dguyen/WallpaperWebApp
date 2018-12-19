@@ -20,7 +20,7 @@
 						*ngFor="let playlist of playlists" 
 						(click)="selectPlaylist(playlist)">
 						
-						<div id='playlistName'>{{ playlist.name }}</div>
+						<div id='playlistName' [ngClass]="{'selectedItem': playlist.href === currentlyPlaying.playlistHref }">{{ playlist.name }}</div>
 					</li>
 				</ul>
 			</div>
@@ -28,7 +28,8 @@
 				<ul class="list-group">
 					<li 
 						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
-						(click)='playSong(song.track.uri, selectedPlaylist.uri); highlight($event)'>
+						[ngClass]="{'selectedItem': song.track.href === currentlyPlaying.songHref }"
+						(click)='playSong(song.track.uri, selectedPlaylist.uri)'>
 
 						<div class='songNumber'>
 							<span id='songText'>{{ i + 1 }}</span>
