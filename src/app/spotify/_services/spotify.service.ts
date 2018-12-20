@@ -10,6 +10,10 @@ export class SpotifyService {
   private tokenExpiry = 0;
   initialized: Promise<any>;
   playerUpdate = new Subject();
+  currentlyPlaying = {
+    playlistUri: null,
+    songUri: null
+  };
 
   constructor(private _http: HttpClient) {
     this.connectSpotify();
@@ -90,6 +94,8 @@ export class SpotifyService {
         headers: this.headers
       }).subscribe(() => {
         resolve();
+        this.currentlyPlaying.songUri = songUri;
+        this.currentlyPlaying.playlistUri = albumUri;
         setTimeout(() => this.getPlayerData(), 500);
       }, (err) => reject(err));
     });
@@ -226,12 +232,22 @@ export class SpotifyService {
         headers: this.headers
       }).subscribe(
         res => {
+          this.updateCurrentSong(res);
           this.playerUpdate.next(res);
           resolve(res);
         },
         err => reject(err)
       );
     });
+  }
+
+  private updateCurrentSong(songData: any) {
+    if (songData['context']) {
+      this.currentlyPlaying.playlistUri = songData['context']['uri'];
+    }
+    if (songData['item']) {
+      this.currentlyPlaying.songUri = songData['item']['uri'];
+    }
   }
 
   /**

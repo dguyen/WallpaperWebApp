@@ -1,0 +1,44 @@
+#musicButtonsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+
+  .musicButtons {
+    width: 45px;
+
+    #shuffle, #repeat {
+      height: 18px;
+      width: 18px;
+    }
+
+    #shuffle {
+      margin-left: 15px;
+    }
+
+    #repeat {
+      margin-right: 15px;
+    }
+
+    #seekBack, #seekNext {
+      width: 36px;
+      height: 36px;
+    }
+
+    svg {
+      fill: rgb(182, 182, 182);
+    }
+
+    svg:hover {
+      fill: rgb(255, 255, 255);
+    }
+
+    svg:active {
+      fill: rgb(124, 124, 124);
+    }
+  }
+}
+
+.buttonSelected {
+  fill: #4eca4e !important;
+}

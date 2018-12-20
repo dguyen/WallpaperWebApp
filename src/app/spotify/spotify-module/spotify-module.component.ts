@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SpotifyService } from '../_services/spotify.service';
 import * as anime from 'animejs';
 
@@ -8,26 +8,16 @@ import * as anime from 'animejs';
   styleUrls: ['./spotify-module.component.scss']
 })
 
-export class SpotifyModuleComponent implements OnInit {
+export class SpotifyModuleComponent {
   loading = true;
   loadingText = '';
   playlists: any;
   userProfile: any;
   selectedPlaylist: any;
   currentView = 'loadingView';
-  repeatState = 'off';
-  isShuffle = false;
-  isPlaying = false;
-  currentlyPlaying = {
-    playlistUri: null,
-    songUri: null
-  };
 
   constructor(private _spotifyService: SpotifyService) {
     this.initialize();
-  }
-
-  ngOnInit() {
   }
 
   initialize() {
@@ -67,26 +57,8 @@ export class SpotifyModuleComponent implements OnInit {
   }
 
   loadData() {
-    this.loadPlayerData();
     this.getProfile();
     this.getPlaylists();
-  }
-
-  loadPlayerData() {
-    this._spotifyService.playerUpdate.subscribe((playerData) => {
-      this.isPlaying = playerData['is_playing'];
-      this.repeatState = playerData['repeat_state'];
-      this.isShuffle = playerData['shuffle_state'];
-      if (playerData['context']) {
-        this.currentlyPlaying.playlistUri = playerData['context']['uri'];
-      }
-      if (playerData['item']) {
-        this.currentlyPlaying.songUri = playerData['item']['uri'];
-      }
-    }, (err) => {
-      this._spotifyService.connectSpotify();
-      throw new Error(err);
-    });
   }
 
   getProfile() {
@@ -161,11 +133,13 @@ export class SpotifyModuleComponent implements OnInit {
     );
   }
 
+  /**
+   * Play a song on spotify
+   * @param songUri uri of song
+   * @param albumUri uri of album
+   */
   playSong(songUri: number, albumUri: string) {
-    this._spotifyService.mediaPlaySong(albumUri, songUri).then(() => {
-      this.currentlyPlaying.songUri = songUri;
-      this.currentlyPlaying.playlistUri = albumUri;
-    }).catch((err) => {
+    this._spotifyService.mediaPlaySong(albumUri, songUri).catch((err) => {
       throw new Error(err);
     });
   }
@@ -195,62 +169,5 @@ export class SpotifyModuleComponent implements OnInit {
       minuteSecond += '0';
     }
     return minuteSecond.replace('.', ':');
-  }
-
-  /**
-   * Toggle pauses/play on current song
-   */
-  toggleSong() {
-    const newAction = this.isPlaying ? 'pause' : 'play';
-    this._spotifyService.mediaPausePlay(newAction).then(() => {
-      this.isPlaying = !this.isPlaying;
-    }).catch((err) => {
-      throw new Error(err);
-    });
-  }
-
-  /**
-   * Toggle the shuffle media control
-   */
-  toggleShuffle() {
-    this._spotifyService.setShuffle(!this.isShuffle).then(() => {
-      this.isShuffle = !this.isShuffle;
-    }).catch((err) => {
-      throw new Error(err);
-    });
-  }
-
-  /**
-   * Toggle the repeat media control
-   */
-  toggleRepeat() {
-    let newState = '';
-    switch (this.repeatState) {
-      case 'off':
-        newState = 'context';
-        break;
-      case 'context':
-        newState = 'track';
-        break;
-      case 'track':
-        newState = 'off';
-        break;
-      default:
-        return;
-    }
-
-    this.repeatState = newState;
-    this._spotifyService.setReplay(newState).catch((err) => {
-      this.repeatState = 'off';
-      throw new Error(err);
-    });
-  }
-
-  /**
-   * Seek next or previous song
-   * @param method 'next' or 'previous'
-   */
-  seek(method: string) {
-    this._spotifyService.mediaSeek(method);
   }
 }
