@@ -1,25 +1,30 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser'); 
 const path = require('path');
 const http = require('http');
 const app = express();
-
-// API file for interacting with MongoDB
 const api = require('./routes/api');
 
 // Parsers
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
+app.use(cookieParser());
 
-// Angular DIST output folder
-app.use(express.static(path.join(__dirname, 'dist')));
+// Spotify setup page
+app.use(express.static(path.join(__dirname, '/public')));
 
 // API location
 app.use('/api', api);
 
-// Send all other requests to the Angular app
+// Spotify setup page
+app.get('/setup', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/html/setup.html'));
+});
+
+// Redirect all requests to setup page
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.redirect('/setup');
 });
 
 //Set Port

@@ -22,6 +22,7 @@
     "@angular/router": "~7.1.0",
     "@types/animejs": "^2.0.1",
     "animejs": "^2.2.0",
+    "cookie-parser": "^1.4.3",
     "core-js": "^2.5.4",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
