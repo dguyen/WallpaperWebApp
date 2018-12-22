@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { StorageService } from 'src/app/_services/storage/storage.service';
 
 @Injectable()
 export class SpotifyService {
-  private refreshToken = 'AQAJVocyTnbHcB8ctZ-NXag5Ys6B8wqaZoMQoiGCI9oMOinlzVsTLZTwkrk_NJopZAuDUcokch2r-ZzL6D79oXHCeMZGa_LvZ6t-W8sgYtCvc71pUBaRCIY4vsUPBt7iM5w';
+  private refreshToken = null;
   private headers = new HttpHeaders().set('Content-type', 'application/json');
   private token: string = null;
   private tokenExpiry = 0;
@@ -15,9 +16,18 @@ export class SpotifyService {
     songUri: null
   };
 
-  constructor(private _http: HttpClient) {
-    this.connectSpotify();
-    setInterval(() => this.getPlayerData(), 10000);
+  constructor(private _http: HttpClient, private _storageService: StorageService) {
+    this.initializeSpotify();
+  }
+
+  /**
+   * Obtains the refresh token and attempts to connect to spotify
+   */
+  initializeSpotify() {
+    this.refreshToken = this._storageService.getStorageJSON('refresh_token');
+    if (this.refreshToken) {
+      this.connectSpotify();
+    }
   }
 
   /**
@@ -26,8 +36,29 @@ export class SpotifyService {
   connectSpotify() {
     this.initialized = this.initializeTokens().then(() => {
       this.getPlayerData();
+      setInterval(() => this.getPlayerData(), 10000);
     }).catch(() => null);
     return this.initialized;
+  }
+
+  /**
+   * Obtain refresh token from spotify if user has not used application yet
+   */
+  setupToken() {
+    return new Promise((resolve, reject) => {
+      this._http.get('/api/load_token', {}).subscribe(
+        res => {
+          if (res['refresh_token']) {
+            this.refreshToken = res['refresh_token'];
+            this._storageService.setStorage('refresh_token', res['refresh_token']);
+            resolve();
+            return;
+          }
+          reject('Token could not be found');
+        },
+        err => reject(err)
+      );
+    });
   }
 
   /*

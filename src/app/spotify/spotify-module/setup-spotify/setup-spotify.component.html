@@ -1,0 +1,11 @@
+<div id="setupSpotify">
+  <h1>Configure Spotify</h1>
+  <p>Head over to the website below and follow the given instructions</p>
+  <div id="tokenContainer">
+    <input type="text" id="setupLink" readonly="readonly" #webLink value="{{ setupLink }}">
+    <div id="copyLink" class="noselect" (click)="copy(webLink)"><span>Copy</span></div>
+  </div>
+  <div id="linkSpotify" (click)="linkSpotify()">
+    LINK SPOTIFY
+  </div>
+</div>		

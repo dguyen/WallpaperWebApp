@@ -1,0 +1,78 @@
+#setupSpotify {
+	display: flex;
+	text-align: center;
+	flex-direction: column;
+	justify-content: center;
+	width: 500px;
+	height: 260px;
+	color: rgb(231, 231, 231);
+	overflow: hidden;
+	margin: auto;
+
+	h1 {
+		margin: 0;
+	}
+
+	#tokenContainer, #linkSpotify {
+		border-radius: 500px;
+		width: 80%;
+		margin: 10px auto 10px auto;
+		height: 30px;
+	}
+
+	#linkSpotify {
+		background-color: #1DB954;
+		font-weight: bold;
+		font-size: 17.5px;
+		line-height: 45px;
+		height: 50px;
+		width: 50%;
+		transition: 0.25s ease-in;
+		color: white;
+	}
+
+	#linkSpotify:hover {
+		background-color: #1ED760;
+	}
+
+	#linkSpotify:active {
+		background-color: #18ac4d;
+		transition: none;
+	}
+
+	#tokenContainer {
+		display: flex;
+
+		#setupLink {
+			border: none;
+			background-color: rgb(226, 226, 226);
+			width: calc(100% - 50px);
+			border-top-left-radius: 500px;
+			border-bottom-left-radius: 500px;
+			text-align: center;
+		}
+
+		#setupLink:focus {
+			outline: none;
+		}
+
+		#copyLink {
+			background-color: rgb(110, 212, 110);
+			height: inherit;
+			width: 50px;
+			border-top-right-radius: 500px;
+			border-bottom-right-radius: 500px;
+			color: black;
+			font-size: 0.9em;
+			line-height: 27.5px;
+		}
+		
+		#copyLink:hover {
+			background-color: rgb(140, 214, 140);
+		}
+		
+		#copyLink:active {
+			background-color: rgb(66, 172, 66);
+		}
+	}
+}

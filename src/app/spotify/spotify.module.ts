@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { SpotifyModuleComponent } from './spotify-module/spotify-module.component';
 import { SpotifyService } from './_services/spotify.service';
 import { MediaControllerComponent } from './spotify-module/media-controller/media-controller.component';
+import { SetupSpotifyComponent } from './spotify-module/setup-spotify/setup-spotify.component';
 
 @NgModule({
   declarations: [
     SpotifyModuleComponent,
-    MediaControllerComponent
+    MediaControllerComponent,
+    SetupSpotifyComponent
   ],
   imports: [
     CommonModule

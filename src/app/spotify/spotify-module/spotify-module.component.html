@@ -7,6 +7,7 @@
 			{{ loadingText }}
 		</div>
 	</div>
+	<div id="spotifySetupContainer"><app-setup-spotify (spotifyLinked)="spotifyLinked()"></app-setup-spotify></div>
 	<div id="spotifyContainer">
 		<div id="header">
 			<div id='backContainer' *ngIf="currentView === 'songView'" (click)="changeView('playlistView')">

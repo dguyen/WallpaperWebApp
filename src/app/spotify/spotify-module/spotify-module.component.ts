@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../_services/spotify.service';
 import * as anime from 'animejs';
 
@@ -8,7 +8,7 @@ import * as anime from 'animejs';
   styleUrls: ['./spotify-module.component.scss']
 })
 
-export class SpotifyModuleComponent {
+export class SpotifyModuleComponent implements OnInit {
   loading = true;
   loadingText = '';
   playlists: any;
@@ -16,8 +16,14 @@ export class SpotifyModuleComponent {
   selectedPlaylist: any;
   currentView = 'loadingView';
 
-  constructor(private _spotifyService: SpotifyService) {
-    this.initialize();
+  constructor(private _spotifyService: SpotifyService) {}
+
+  ngOnInit() {
+    if (this._spotifyService.initialized) {
+      this.initialize();
+    } else {
+      this.showSpotifySetup();
+    }
   }
 
   initialize() {
@@ -114,12 +120,12 @@ export class SpotifyModuleComponent {
   }
 
   openView() {
-    anime({
+    return anime({
       targets: '#bodyContainer',
       height: [0, 440],
       easing: 'easeOutExpo',
       duration: 300
-    });
+    }).finished;
   }
 
   selectPlaylist(playlistSelected: any) {
@@ -169,5 +175,57 @@ export class SpotifyModuleComponent {
       minuteSecond += '0';
     }
     return minuteSecond.replace('.', ':');
+  }
+
+  /**
+   * Fires when user clicks 'Link Spotify' during setup
+   */
+  private spotifyLinked() {
+    this.hideSpotifySetup().then(() => {
+      this._spotifyService.initializeSpotify();
+      this._spotifyService.initialized.then(() => {
+        this.initialize();
+      });
+    });
+  }
+
+  /**
+   * Opens panel for user to setup spotify
+   */
+  showSpotifySetup() {
+    return anime.timeline().add({
+      targets: '#container',
+      easing: 'easeOutExpo',
+      width: '540px',
+      height: '310px',
+      duration: 500
+    }).add({
+      targets: '#spotifySetupContainer',
+      easing: 'easeOutExpo',
+      width: '540px',
+      height: '300px',
+      offset: 0,
+      duration: 500
+    }).finished;
+  }
+
+  /**
+   * Closes panel for user to setup spotify
+   */
+  hideSpotifySetup() {
+    return anime.timeline().add({
+      targets: '#container',
+      easing: 'easeOutExpo',
+      width: '50px',
+      height: '50px',
+      duration: 250
+    }).add({
+      targets: '#spotifySetupContainer',
+      easing: 'easeOutExpo',
+      width: '0px',
+      height: '0px',
+      duration: 175,
+      offset: 0
+    }).finished;
   }
 }

@@ -1,11 +1,19 @@
 $background-color: #0d0d0d;
+$primary-radius: 15px;
 
 #container {
-	border-radius: 15px;
+	border-radius: $primary-radius;
 	background-color: $background-color;
 	text-align: center;
 	width: 50px;
 	user-select: none;
+}
+
+#spotifySetupContainer {
+	margin: auto;
+	overflow: hidden;
+	height: 0px;
+	width: 0px;
 }
 
 #spotifyContainer {
@@ -55,8 +63,8 @@ $background-color: #0d0d0d;
 	height: 50px;
 	width: inherit;
 	border-bottom: 1px grey;
-	border-top-left-radius: 15px;
-	border-top-right-radius: 15px;
+	border-top-left-radius: $primary-radius;
+	border-top-right-radius: $primary-radius;
 
 	#backContainer {
 		float: left;
