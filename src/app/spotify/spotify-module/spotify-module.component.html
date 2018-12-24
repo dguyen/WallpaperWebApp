@@ -1,4 +1,10 @@
 <div id="container">
+	<div id="header">
+		<div id='backContainer' *ngIf="currentView === 'songView'" (click)="changeView('playlistView')">
+			<img id="backIcon" src="../../assets/img/baseline_arrow_back_ios_white_18dp.png">
+		</div>	
+	</div>
+
 	<div id="spotifyLogoContainer"> 
 		<img id="spotifyLogo" src="../../assets/spotify_module/spotify-logo.png">
 	</div>
@@ -8,15 +14,11 @@
 		</div>
 	</div>
 	<div id="spotifySetupContainer"><app-setup-spotify (spotifyLinked)="spotifyLinked()"></app-setup-spotify></div>
+	<div id="selectDeviceContainer"><app-select-device (deviceSelected)="deviceSelected()" *ngIf="currentView === 'deviceView'"></app-select-device></div>
 	<div id="spotifyContainer">
-		<div id="header">
-			<div id='backContainer' *ngIf="currentView === 'songView'" (click)="changeView('playlistView')">
-				<img id="backIcon" src="../../assets/img/baseline_arrow_back_ios_white_18dp.png">
-			</div>	
-		</div>
 		<div id="bodyContainer">			
 			<div id="playlists" *ngIf="currentView == 'playlistView'">
-				<ul class="list-group">
+				<ul>
 					<li
 						*ngFor="let playlist of playlists" 
 						(click)="selectPlaylist(playlist)">
@@ -26,7 +28,7 @@
 				</ul>
 			</div>
 			<div id="songs" *ngIf="currentView == 'songView'">
-				<ul class="list-group">
+				<ul>
 					<li 
 						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
 						[ngClass]="{'selectedItem': song.track.uri === _spotifyService.currentlyPlaying.songUri }"

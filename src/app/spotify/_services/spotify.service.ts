@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { StorageService } from 'src/app/_services/storage/storage.service';
 
 @Injectable()
@@ -9,36 +9,42 @@ export class SpotifyService {
   private headers = new HttpHeaders().set('Content-type', 'application/json');
   private token: string = null;
   private tokenExpiry = 0;
-  initialized: Promise<any>;
+  spotifyReady = new BehaviorSubject(null);
   playerUpdate = new Subject();
   currentlyPlaying = {
     playlistUri: null,
     songUri: null
   };
 
-  constructor(private _http: HttpClient, private _storageService: StorageService) {
-    this.initializeSpotify();
-  }
+  constructor(private _http: HttpClient, private _storageService: StorageService) { }
 
   /**
    * Obtains the refresh token and attempts to connect to spotify
    */
   initializeSpotify() {
-    this.refreshToken = this._storageService.getStorageJSON('refresh_token');
-    if (this.refreshToken) {
-      this.connectSpotify();
-    }
+    return new Promise((resolve, reject) => {
+      this.refreshToken = this._storageService.getStorageJSON('refresh_token');
+      if (this.refreshToken) {
+        this.initializeTokens().then(() => {
+          this.setupPlayerSync().then(() => resolve()).catch((err) => reject(err));
+        }).catch((err) => reject(err));
+      } else {
+        reject('No refresh_token found');
+        return;
+      }
+    });
   }
 
   /**
-   * Initialize spotify by attempting to connect to server
+   * Sets up how often the player is synced
    */
-  connectSpotify() {
-    this.initialized = this.initializeTokens().then(() => {
-      this.getPlayerData();
-      setInterval(() => this.getPlayerData(), 10000);
-    }).catch(() => null);
-    return this.initialized;
+  setupPlayerSync() {
+    return new Promise((resolve, reject) => {
+      this.getPlayerData().then(() => {
+        resolve();
+        setInterval(() => this.getPlayerData(), 10000);
+      }).catch((err) => reject(err));
+    });
   }
 
   /**
@@ -76,11 +82,11 @@ export class SpotifyService {
           this.headers = this.headers.append('Authorization', 'Bearer ' + this.token);
           this.tokenExpiry = res['expires_in'];
           setTimeout(() => { this.initializeTokens(); }, (this.tokenExpiry - 20) * 1000);
+          this.spotifyReady.next(true);
           resolve();
         },
         err => {
           reject(err);
-          this.initialized = null;
         }
       );
     });
@@ -240,6 +246,22 @@ export class SpotifyService {
   }
 
   /**
+   * Set a device to playback on
+   * @param deviceId the new device to stream audio to
+   */
+  setDevice(deviceId: string): Promise<any> {
+    this.checkToken();
+    return new Promise((resolve, reject) => {
+      this._http.put('https://api.spotify.com/v1/me/player', {
+        device_ids: [deviceId],
+        play: true
+      }, {
+        headers: this.headers
+      }).subscribe((res) => resolve(res), (err) => reject(err));
+    });
+  }
+
+  /**
    * Throws an error if user is not initialized
    */
   checkToken() {
@@ -254,15 +276,16 @@ export class SpotifyService {
    */
    getPlayerData(): Promise<any> {
     try { this.checkToken(); } catch (err) { return; }
-    if (!this.initialized) {
-      return;
-    }
 
     return new Promise((resolve, reject) => {
       this._http.get('https://api.spotify.com/v1/me/player', {
         headers: this.headers
       }).subscribe(
         res => {
+          if (!res) {
+            reject('No device found');
+            return;
+          }
           this.updateCurrentSong(res);
           this.playerUpdate.next(res);
           resolve(res);

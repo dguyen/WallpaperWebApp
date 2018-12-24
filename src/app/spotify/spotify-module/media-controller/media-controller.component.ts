@@ -24,7 +24,7 @@ export class MediaControllerComponent {
       this.repeatState = playerData['repeat_state'];
       this.isShuffle = playerData['shuffle_state'];
     }, (err) => {
-      this._spotifyService.connectSpotify();
+      this._spotifyService.initializeSpotify();
       throw new Error(err);
     });
   }

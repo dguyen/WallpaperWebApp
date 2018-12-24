@@ -1,0 +1,7 @@
+<div id="selectDevice">
+  <ul>
+    <li *ngFor="let device of devices" [ngClass]="{ selected: device.is_active }" (click)="selectDevice(device)">{{ device.name }}</li>
+  </ul>
+  <div class="centered" *ngIf="!devices">Loading...</div>
+  <div class="centered" *ngIf="devices && devices.length === 0">No devices found</div>
+</div>

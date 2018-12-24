@@ -4,12 +4,14 @@ import { SpotifyModuleComponent } from './spotify-module/spotify-module.componen
 import { SpotifyService } from './_services/spotify.service';
 import { MediaControllerComponent } from './spotify-module/media-controller/media-controller.component';
 import { SetupSpotifyComponent } from './spotify-module/setup-spotify/setup-spotify.component';
+import { SelectDeviceComponent } from './spotify-module/select-device/select-device.component';
 
 @NgModule({
   declarations: [
     SpotifyModuleComponent,
     MediaControllerComponent,
-    SetupSpotifyComponent
+    SetupSpotifyComponent,
+    SelectDeviceComponent
   ],
   imports: [
     CommonModule

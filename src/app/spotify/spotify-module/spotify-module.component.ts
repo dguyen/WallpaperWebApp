@@ -16,25 +16,35 @@ export class SpotifyModuleComponent implements OnInit {
   selectedPlaylist: any;
   currentView = 'loadingView';
 
-  constructor(private _spotifyService: SpotifyService) {}
+  constructor(private _spotifyService: SpotifyService) { }
 
   ngOnInit() {
-    if (this._spotifyService.initialized) {
-      this.initialize();
-    } else {
-      this.showSpotifySetup();
-    }
+    this.initialize();
   }
 
   initialize() {
-    this._spotifyService.initialized.then(() => {
-      this.loadData();
-    }).catch(() => {
-      this.setRetry('Problem connecting to spotify...', 5).then(() => {
-        this._spotifyService.connectSpotify();
-        this.initialize();
+    this._spotifyService.initializeSpotify().then(() => {
+      this.loadData().then(() => {
+        this.loading = false;
+        this.currentView = 'playlistView';
+        this.showSpotify();
       });
+    }).catch((err) => {
+      if (err ===  'No refresh_token found') {
+        this.showSpotifySetup();
+      } else if (err === 'No device found') {
+        this.loading = false;
+        this.showDeviceList();
+      } else {
+        this.setRetry('Problem connecting to spotify...', 5).then(() => {
+          this.initialize();
+        });
+      }
     });
+  }
+
+  deviceSelected() {
+    this.hideDeviceList().then(() => this.initialize());
   }
 
   setRetry(errorText: string, timeout: number) {
@@ -62,27 +72,32 @@ export class SpotifyModuleComponent implements OnInit {
     });
   }
 
+  /**
+   * Returns a promise that resolves when profile and playlist data has been obtained
+   */
   loadData() {
-    this.getProfile();
-    this.getPlaylists();
+    return Promise.all([this.getProfile(), this.getPlaylists()]);
   }
 
   getProfile() {
-    this._spotifyService.getUserProfile().then((profile) => {
-      this.userProfile = profile;
-    }).catch(() => {
-      this.setRetry('Profile could not be obtained...', 5000).then(() => this.getProfile());
+    return new Promise((resolve, reject) => {
+      this._spotifyService.getUserProfile().then((profile) => {
+        this.userProfile = profile;
+        resolve();
+      }).catch(() => {
+        this.setRetry('Profile could not be obtained...', 5000).then(() => this.getProfile());
+      });
     });
   }
 
   getPlaylists() {
-    this._spotifyService.getUserPlaylists().then((playlists) => {
-      this.playlists = playlists;
-      this.loading = false;
-      this.currentView = 'playlistView';
-      this.showSpotify();
-    }).catch(() => {
-      this.setRetry('Problem retrieving playlists...', 5000).then(() => this.getPlaylists());
+    return new Promise((resolve, reject) => {
+      this._spotifyService.getUserPlaylists().then((playlists) => {
+        this.playlists = playlists;
+        resolve();
+      }).catch(() => {
+        this.setRetry('Problem retrieving playlists...', 5000).then(() => this.getPlaylists());
+      });
     });
   }
 
@@ -97,6 +112,32 @@ export class SpotifyModuleComponent implements OnInit {
       easing: 'easeOutExpo',
       offset: 0,
       translateX: 250
+    }).add({
+      targets: '#header',
+      easing: 'easeOutExpo',
+      'border-bottom-left-radius': 0,
+      'border-bottom-right-radius': 0,
+      offset: 0,
+    }).finished;
+  }
+
+  hideSpotify() {
+    return anime.timeline().add({
+      targets: '#container, #spotifyContainer',
+      easing: 'easeOutExpo',
+      width: 50,
+      height: 50
+    }).add({
+      targets: '#spotifyLogoContainer',
+      easing: 'easeOutExpo',
+      offset: 0,
+      translateX: 0
+    }).add({
+      targets: '#header',
+      easing: 'easeOutExpo',
+      'border-bottom-left-radius': 15,
+      'border-bottom-right-radius': 15,
+      offset: 0,
     }).finished;
   }
 
@@ -182,8 +223,7 @@ export class SpotifyModuleComponent implements OnInit {
    */
   private spotifyLinked() {
     this.hideSpotifySetup().then(() => {
-      this._spotifyService.initializeSpotify();
-      this._spotifyService.initialized.then(() => {
+      this._spotifyService.initializeSpotify().then(() => {
         this.initialize();
       });
     });
@@ -221,6 +261,41 @@ export class SpotifyModuleComponent implements OnInit {
       duration: 250
     }).add({
       targets: '#spotifySetupContainer',
+      easing: 'easeOutExpo',
+      width: '0px',
+      height: '0px',
+      duration: 175,
+      offset: 0
+    }).finished;
+  }
+
+  showDeviceList() {
+    this.currentView = 'deviceView';
+    return anime.timeline().add({
+      targets: '#container',
+      easing: 'easeOutExpo',
+      width: '300px',
+      height: '225px',
+      duration: 500
+    }).add({
+      targets: '#selectDeviceContainer',
+      easing: 'easeOutExpo',
+      width: '300px',
+      height: '160px',
+      offset: 0,
+      duration: 500
+    }).finished;
+  }
+
+  hideDeviceList() {
+    return anime.timeline().add({
+      targets: '#container',
+      easing: 'easeOutExpo',
+      width: '50px',
+      height: '50px',
+      duration: 250
+    }).add({
+      targets: '#selectDeviceContainer',
       easing: 'easeOutExpo',
       width: '0px',
       height: '0px',
