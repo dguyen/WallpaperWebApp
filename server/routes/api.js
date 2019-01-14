@@ -109,7 +109,7 @@ router.get('/refresh_token', function (req, res) {
     if (error) {
       next(error);
     } else if(body.error) {
-      sendError(body, res);
+      sendError(body.error_description ? body.error_description : body, res);
     } else {
       res.send({
         'access_token': body.access_token,
@@ -117,17 +117,6 @@ router.get('/refresh_token', function (req, res) {
       });
     }
   });
-});
-
-router.get('/load_token', function (req, res) {
-  let refreshToken = req.cookies.refreshToken;
-  if (refreshToken) {
-    res.send({
-      refresh_token: refreshToken
-    });
-  } else {
-    sendError('No token found', res);
-  }
 });
 
 module.exports = router;
