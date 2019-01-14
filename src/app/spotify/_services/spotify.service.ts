@@ -50,19 +50,24 @@ export class SpotifyService {
   /**
    * Obtain refresh token from spotify if user has not used application yet
    */
-  setupToken() {
+  setupToken(token: string) {
     return new Promise((resolve, reject) => {
-      this._http.get('/api/load_token', {}).subscribe(
+      if (!token || token.length <= 100) {
+        reject('Invalid refresh token');
+        return;
+      }
+      this._http.get('/api/refresh_token', {
+        params: { 'refresh_token': token }
+      }).subscribe(
         res => {
-          if (res['refresh_token']) {
-            this.refreshToken = res['refresh_token'];
-            this._storageService.setStorage('refresh_token', res['refresh_token']);
+          if (res['access_token']) {
+            this._storageService.setStorage('refresh_token', token);
             resolve();
             return;
           }
-          reject('Token could not be found');
+          reject('Invalid refresh token');
         },
-        err => reject(err)
+        err => reject(err.error.message ? err.error.message : err)
       );
     });
   }

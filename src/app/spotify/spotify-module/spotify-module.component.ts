@@ -237,7 +237,7 @@ export class SpotifyModuleComponent implements OnInit {
       targets: '#container',
       easing: 'easeOutExpo',
       width: '540px',
-      height: '310px',
+      height: '350px',
       duration: 500
     }).add({
       targets: '#spotifySetupContainer',

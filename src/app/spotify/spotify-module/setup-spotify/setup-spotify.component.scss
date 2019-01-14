@@ -4,7 +4,7 @@
 	flex-direction: column;
 	justify-content: center;
 	width: 500px;
-	height: 260px;
+	height: 300px;
 	color: rgb(231, 231, 231);
 	overflow: hidden;
 	margin: auto;
@@ -13,15 +13,10 @@
 		margin: 0;
 	}
 
-	#tokenContainer, #linkSpotify {
-		border-radius: 500px;
-		width: 80%;
-		margin: 10px auto 10px auto;
-		height: 30px;
-	}
-
 	#linkSpotify {
 		background-color: #1DB954;
+		border-radius: 500px;
+		margin: auto;
 		font-weight: bold;
 		font-size: 17.5px;
 		line-height: 45px;
@@ -40,10 +35,13 @@
 		transition: none;
 	}
 
-	#tokenContainer {
+	.textContainer {
 		display: flex;
+		margin: 0 auto 0 auto;
+		height: 30px;
+		width: 80%;
 
-		#setupLink {
+		.textField {
 			border: none;
 			background-color: rgb(226, 226, 226);
 			width: calc(100% - 50px);
@@ -52,11 +50,11 @@
 			text-align: center;
 		}
 
-		#setupLink:focus {
+		.textField:focus {
 			outline: none;
 		}
 
-		#copyLink {
+		.textButton {
 			background-color: rgb(110, 212, 110);
 			height: inherit;
 			width: 50px;
@@ -67,12 +65,58 @@
 			line-height: 27.5px;
 		}
 		
-		#copyLink:hover {
+		.textButton:hover {
 			background-color: rgb(140, 214, 140);
 		}
 		
-		#copyLink:active {
+		.textButton:active {
 			background-color: rgb(66, 172, 66);
 		}
 	}
+
+	#errorMsg {
+		height: 0.75em;
+		width: 80%;
+		margin: 0 auto -0.75em auto;
+		padding-left: 2em;
+		font-size: 0.75em;
+		color: rgb(241, 70, 70);
+	}
+}
+
+// Spinner sourced from https://loading.io/css/
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin: 6px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
