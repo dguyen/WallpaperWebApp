@@ -15,7 +15,8 @@ body {
   width: fit-content;
   height: fit-content;
   padding: 20px 50px 30px 50px;
-  background-color: white;
+  background-color: #0d0d0d;
+	color: rgb(231, 231, 231);
 }
 
 @media (max-width: 1000px) {
@@ -41,4 +42,53 @@ ol {
 
 li {
   margin: 0.5em 0 0.5em 0;
+}
+
+.textContainer {
+  display: flex;
+  margin: 0 auto 0 auto;
+  height: 30px;
+  width: 95%;
+}
+
+.textField {
+  border: none;
+  background-color: rgb(226, 226, 226);
+  width: calc(100% - 50px);
+  border-top-left-radius: 500px;
+  border-bottom-left-radius: 500px;
+  text-align: center;
+}
+
+.textField:focus {
+  outline: none;
+}
+
+.textButton {
+  background-color: rgb(110, 212, 110);
+  height: inherit;
+  width: 50px;
+  border-top-right-radius: 500px;
+  border-bottom-right-radius: 500px;
+  color: black;
+  font-size: 0.9em;
+  line-height: 27.5px;
+}
+
+.textButton:hover {
+  background-color: rgb(140, 214, 140);
+}
+
+.textButton:active {
+  background-color: rgb(66, 172, 66);
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
