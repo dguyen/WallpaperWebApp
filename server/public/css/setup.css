@@ -44,6 +44,10 @@ li {
   margin: 0.5em 0 0.5em 0;
 }
 
+#signInLink {
+  color: orange;
+}
+
 .textContainer {
   display: flex;
   margin: 0 auto 0 auto;
@@ -53,7 +57,7 @@ li {
 
 .textField {
   border: none;
-  background-color: rgb(226, 226, 226);
+  background-color: rgb(255, 255, 255);
   width: calc(100% - 50px);
   border-top-left-radius: 500px;
   border-bottom-left-radius: 500px;

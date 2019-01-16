@@ -53,7 +53,7 @@ export class SetupSpotifyComponent implements OnInit {
       } else if (err === 'Invalid refresh token') {
         this.errorMsg = 'Invalid refresh token, please check your spotify token ';
       } else {
-        this.errorMsg = err ? err : 'Something went wrong, please try again later';
+        this.errorMsg = 'Something went wrong, please try again later';
       }
     });
   }

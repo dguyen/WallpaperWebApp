@@ -221,7 +221,7 @@ export class SpotifyModuleComponent implements OnInit {
   /**
    * Fires when user clicks 'Link Spotify' during setup
    */
-  private spotifyLinked() {
+  spotifyLinked() {
     this.hideSpotifySetup().then(() => {
       this._spotifyService.initializeSpotify().then(() => {
         this.initialize();
