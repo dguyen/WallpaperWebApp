@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const querystring = require('querystring');
 const request = require('request');
+const cors = require('cors');
 
 // Spotify API settings
 const client_id = 'd230707936dc4662ac81eddf2fbae9e0';
@@ -93,7 +94,7 @@ router.get('/callback', function (req, res) {
 });
 
 // Requesting access token from refresh token
-router.get('/refresh_token', function (req, res) {
+router.get('/refresh_token', cors(), function (req, res) {
   var refresh_token = req.query.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
