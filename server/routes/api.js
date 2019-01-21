@@ -5,10 +5,18 @@ const request = require('request');
 const cors = require('cors');
 
 // Spotify API settings
-const client_id = 'd230707936dc4662ac81eddf2fbae9e0';
-const client_secret = '74c70892279f457b8a41d08eeabb9c6d'; // Reset client_secret after making repository public
+const client_id = null; // Place Client ID here
+const client_secret = null; // Place Client Secret here
 const redirect_uri = 'http://localhost:3000/api/callback';
 const stateKey = 'spotify_auth_state';
+
+(function checkAPiKeys() {
+  if (!client_id) {
+    throw new Error('Spotify Client ID required');
+  } else if (!client_secret) {
+    throw new Error('Spotify Client Secret required');
+  }
+})();
 
 // Error handling
 const sendError = (err, res) => {
