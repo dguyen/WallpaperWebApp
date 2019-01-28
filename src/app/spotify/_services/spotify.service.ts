@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { StorageService } from 'src/app/_services/storage/storage.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class SpotifyService {
+  private server = environment.apiServer;
   private refreshToken = null;
   private headers = new HttpHeaders().set('Content-type', 'application/json');
   private token: string = null;
@@ -56,7 +58,7 @@ export class SpotifyService {
         reject('Invalid refresh token');
         return;
       }
-      this._http.get('/api/refresh_token', {
+      this._http.get(this.server + '/api/refresh_token', {
         params: { 'refresh_token': token }
       }).subscribe(
         res => {
@@ -77,7 +79,7 @@ export class SpotifyService {
   */
   initializeTokens() {
     return new Promise((resolve, reject) => {
-      this._http.get('/api/refresh_token', {
+      this._http.get(this.server + '/api/refresh_token', {
         params: { 'refresh_token': this.refreshToken }
       }).subscribe(
         res => {
