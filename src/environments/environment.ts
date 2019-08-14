@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiServer: 'http://127.0.0.1:3000'
+  apiServer: 'https://spotify-token-auth.herokuapp.com'
 };
 
 /*

@@ -50,22 +50,21 @@ Launch `Wallpaper Engine`
 
 ## Development server
 
-Run `ng start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-### Using different Spotify API
+### Using different Spotify API keys
 
-If you would like to develop using your own Spotify API follow these steps.
+If you would like to develop using your own Spotify API keys follow these steps.
 
-**Configuring keys**
+**Obtaining server files**
+ 1. Head over to [spotify-token-auth](https://github.com/dguyen/spotify-token-auth)
+ 2. Clone the repository
+ 3. Follow README instructions on how to configure server
 
- 1. Create a Spotify Application [here](https://developer.spotify.com/dashboard/applications)
- 2. Set the redirect uri of your Spotify Application as `http://localhost:3000/api/callback`
- 3. Note the Client ID and Client Secret of your Spotify Application
- 4. Inside server\routes\api.js input your Client ID and Client Secret
- 5. Inside ***src\environment.ts*** and ***src\environment.prod.ts*** replace apiServer with `http://127.0.0.1:3000/`
+**Configuring project**
+ 1. Inside ***src\environment.ts*** set apiServer as `http://127.0.0.1:3000/`
 
-**Running development server**
-
- 1. Run `node server/server.js`
- 2. Run `npm start` to start dev server
+**Running development server with different Spotify API keys**
+ 1. Run the spotify-token-auth NodeJS app
+ 2. Run `npm startWProxy` to start dev server with a proxy
  3. Navigate to `http://localhost:4200/`

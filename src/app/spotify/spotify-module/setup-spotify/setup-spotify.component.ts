@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { SpotifyService } from '../../_services/spotify.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-setup-spotify',
@@ -8,15 +9,14 @@ import { SpotifyService } from '../../_services/spotify.service';
 })
 export class SetupSpotifyComponent implements OnInit {
   @Output() spotifyLinked = new EventEmitter();
-  setupLink = 'localhost:3000/setup'; // Todo: Replace with live server
+  setupLink = environment.apiServer + '/setup';
   token = '';
   isLoading = false;
   errorMsg = '';
 
   constructor(private _spotifyService: SpotifyService) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * Copy an element's value onto the user's clipboard
