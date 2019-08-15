@@ -9,6 +9,7 @@ import { SpotifyService } from '../../_services/spotify.service';
 export class SelectDeviceComponent implements OnInit {
   @Output() deviceSelected = new EventEmitter();
   devices: Array<any>;
+  refreshing: Boolean = false;
 
   constructor(private _spotifyService: SpotifyService) { }
 
@@ -20,11 +21,16 @@ export class SelectDeviceComponent implements OnInit {
    * Refresh device list
    */
   refreshDeviceList() {
+    if (this.refreshing) { return; }
+
+    this.refreshing = true;
     this._spotifyService.spotifyReady.subscribe((isReady) => {
       if (!isReady) { return; }
       this._spotifyService.getDevices().then((devices) => {
         this.devices = devices;
+        this.refreshing = false;
       }).catch((err) => {
+        this.refreshing = false;
         throw new Error(err);
       });
     });
@@ -41,7 +47,12 @@ export class SelectDeviceComponent implements OnInit {
         x.is_active = x.id === device.id ? true : false;
       });
     }).catch((err) => {
-      throw new Error(err);
+      if (err.status === 404) {
+        this.refreshing = false;
+        this.refreshDeviceList();
+      } else {
+        throw new Error(err);
+      }
     });
   }
 }

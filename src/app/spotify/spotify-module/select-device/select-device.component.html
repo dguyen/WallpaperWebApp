@@ -1,7 +1,11 @@
 <div id="selectDevice">
   <ul>
     <li *ngFor="let device of devices" [ngClass]="{ selected: device.is_active }" (click)="selectDevice(device)">{{ device.name }}</li>
+    <li (click)="refreshDeviceList()" id="refreshList">
+      <p *ngIf="!refreshing">Refresh</p>
+      <p *ngIf="refreshing">Refreshing</p>
+    </li>
   </ul>
   <div class="centered" *ngIf="!devices">Loading...</div>
-  <div class="centered" *ngIf="devices && devices.length === 0">No devices found</div>
+  <div class="centered" *ngIf="devices && devices.length === 0"><h4>No devices found</h4></div>
 </div>
