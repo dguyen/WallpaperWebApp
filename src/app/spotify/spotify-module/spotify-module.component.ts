@@ -9,6 +9,7 @@ import * as anime from 'animejs';
 })
 
 export class SpotifyModuleComponent implements OnInit {
+  private errorListener = null;
   loading = true;
   loadingText = '';
   playlists: any;
@@ -22,12 +23,31 @@ export class SpotifyModuleComponent implements OnInit {
     this.initialize();
   }
 
+  /**
+   * Subscribes to SpotifyService's error stream
+   */
+  setupListener() {
+    if (this.errorListener) {
+      return;
+    }
+    // Checks for error post setup
+    this.errorListener = this._spotifyService.spotifyError.subscribe((data) => {
+      if (data === 'No device found' && this.currentView !== 'deviceView') {
+        this.showDeviceList();
+      }
+    });
+  }
+
+  /**
+   * Initializes the Spotify module and handles errors
+   */
   initialize() {
     this._spotifyService.initializeSpotify().then(() => {
       this.loadData().then(() => {
         this.loading = false;
         this.currentView = 'playlistView';
         this.showSpotify();
+        this.setupListener();
       });
     }).catch((err) => {
       if (err ===  'No refresh_token found') {
@@ -43,6 +63,9 @@ export class SpotifyModuleComponent implements OnInit {
     });
   }
 
+  /**
+   * Hides the device list and attempts to initialize with the new device
+   */
   deviceSelected() {
     this.hideDeviceList().then(() => this.initialize());
   }

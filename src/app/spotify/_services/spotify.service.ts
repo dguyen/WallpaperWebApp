@@ -11,7 +11,9 @@ export class SpotifyService {
   private headers = new HttpHeaders().set('Content-type', 'application/json');
   private token: string = null;
   private tokenExpiry = 0;
+  private playerSync = null;
   spotifyReady = new BehaviorSubject(null);
+  spotifyError = new Subject();
   playerUpdate = new Subject();
   currentlyPlaying = {
     playlistUri: null,
@@ -44,9 +46,18 @@ export class SpotifyService {
     return new Promise((resolve, reject) => {
       this.getPlayerData().then(() => {
         resolve();
-        setInterval(() => this.getPlayerData(), 10000);
+        this.playerSync = setInterval(() => this.getPlayerData(), 10000);
       }).catch((err) => reject(err));
     });
+  }
+
+  /**
+   * Stops the player from automatically syncing
+   */
+  stopPlayerSync() {
+    if (this.playerSync) {
+      clearInterval(this.playerSync);
+    }
   }
 
   /**
@@ -88,7 +99,7 @@ export class SpotifyService {
           }
           this.headers = this.headers.append('Authorization', 'Bearer ' + this.token);
           this.tokenExpiry = res['expires_in'];
-          setTimeout(() => { this.initializeTokens(); }, (this.tokenExpiry - 20) * 1000);
+          setInterval(() => { this.initializeTokens(); }, (this.tokenExpiry - 20) * 1000);
           this.spotifyReady.next(true);
           resolve();
         },
@@ -290,6 +301,8 @@ export class SpotifyService {
       }).subscribe(
         res => {
           if (!res) {
+            this.spotifyError.next('No device found');
+            this.stopPlayerSync();
             reject('No device found');
             return;
           }
@@ -297,7 +310,17 @@ export class SpotifyService {
           this.playerUpdate.next(res);
           resolve(res);
         },
-        err => reject(err)
+        err => {
+          // If unauthorized, retry obtaining token once
+          if (err.status === 401) {
+            this.initializeTokens().then(() => {
+              this.getPlayerData().then((playerData) => resolve(playerData));
+            }).catch(() => {
+              reject('Unauthorized user');
+            });
+          }
+          reject(err);
+        }
       );
     });
   }
