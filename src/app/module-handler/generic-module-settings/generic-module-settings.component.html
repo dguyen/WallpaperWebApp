@@ -1,0 +1,28 @@
+<h3 id="title">{{ selectedModule.name }} module</h3>
+<div class="rangeSlider" id="xController">
+  <h5 id="rangeTitle">Horizontal Position</h5>
+  <input
+    class="rangeSliderRange"
+    [(ngModel)]="selectedModule.xPos"
+    (ngModelChange)="updateModuleUI(selectedModule)"
+    (change)="onModuleChange()"
+    type="range" min="0" max="{{ getScreenWidth() }}"
+  />
+</div> 
+<div class="rangeSlider" id="yController">
+  <h5 id="rangeTitle">Vertical Position</h5>
+  <input 
+    id="flip"
+    class="rangeSliderRange" 
+    [(ngModel)]="selectedModule.yPos"
+    (ngModelChange)="updateModuleUI(selectedModule)"
+    (change)="onModuleChange()"
+    type="range" min="0" max="{{ getScreenHeight() }}"
+  />
+</div>				
+
+<div class="toggleButton" [ngClass]="{'disabledModule': selectedModule.enabled }" (click)="toggleModule(!selectedModule.enabled)">
+  {{ selectedModule.enabled ? "Disable" : "Enable" }}
+</div>
+
+<div class="toggleButton" id="clearDataBtn" (click)="resetModule()">Reset</div>

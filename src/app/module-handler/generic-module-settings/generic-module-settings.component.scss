@@ -1,0 +1,145 @@
+#title {
+  text-align: center;
+  margin: 0px 0px 12.5px 0px;
+}
+
+.rangeSlider {
+	margin: 5px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  #rangeTitle {
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.rangeSliderRange {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+	width: 250px;
+  height: 5px;
+  margin: 9px auto 0 auto;
+  border-radius: 1.5px;
+	background: #d7dcdf;
+	outline: none;
+}
+
+.toggleButton {
+  background-color: #1DB954;
+  width: 95px;
+  height: 30px;
+  line-height: 28px;
+  border-radius: 25px;
+  font-size: 15px;
+  transition: 0.25s ease-in;
+  margin: 7.5px auto 7.5px auto;
+  font-weight: bold;
+  text-align: center;
+}
+
+.toggleButton:hover {
+  background-color: #1ED760;
+  transition: 0.25s ease-in;
+
+}
+
+.toggleButton:active {
+  background-color: #18ac4d;
+  transition: none;
+}
+
+.disabledModule {
+  background-color: rgb(194, 42, 42);
+}
+
+.disabledModule:hover {
+  background-color: rgb(194, 42, 42);
+  transition: 0.25s ease-in;
+}
+
+.disabledModule:active {
+  background-color: rgb(194, 42, 42);
+}
+
+#clearDataBtn {
+  background-color: #e2871e;
+  width: 70px;
+  height: 23px;
+  line-height: 21.5px;
+  font-size: 13px;
+}
+
+#clearDataBtn:hover {
+  background-color: #df943f;
+}
+
+#clearDataBtn:active {
+  background-color: #e28113;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb {
+  -moz-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange:active::-moz-range-thumb {
+	background: #0ff3c5;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange:active::-webkit-slider-thumb {
+	background: #0ff3c5;
+}
+
+#flip {
+  -ms-transform: scaleX(-1); 
+  -webkit-transform: scaleX(-1); 
+  transform: scaleX(-1);
+}

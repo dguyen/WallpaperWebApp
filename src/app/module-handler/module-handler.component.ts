@@ -49,14 +49,6 @@ export class ModuleHandlerComponent implements OnInit {
   }
 
   /**
-   * Fires when the properties of a module changes
-   */
-  onModuleChange() {
-    this._moduleStorage.updateModule(this.selectedModule);
-    this.updateModuleUI(this.selectedModule);
-  }
-
-  /**
    * Update the properties of the selected module
    * @param newValue new module values
    */
@@ -71,7 +63,7 @@ export class ModuleHandlerComponent implements OnInit {
    * Displays the properties of the selected module
    * @param moduleData data of selected module
    */
-  selectModule(moduleData) {
+  selectModule(moduleData: Module) {
     this.selectedModule = moduleData;
     this.openModuleSettings();
   }
@@ -105,14 +97,14 @@ export class ModuleHandlerComponent implements OnInit {
       easing: 'easeOutExpo',
       duration: 250,
       width: '300px',
-      height: 45 * (this.moduleList.length + 1) + 17.5,
+      height: 45 * (this.moduleList.length + 2) + 17.5,
       opacity: 1,
     }).add({
       targets: '.moduleList',
       easing: 'easeOutExpo',
       duration: 250,
       offset: 0,
-      height: 45 * this.moduleList.length
+      height: 45 * (this.moduleList.length + 1)
     }).add({
       targets: '.gearContainer',
       duration: 250,
@@ -162,7 +154,7 @@ export class ModuleHandlerComponent implements OnInit {
     if (this.animationRunning) { return; }
     this.animationRunning = true;
     this.showBackButton = true;
-    const settingHeight = 150;
+    const settingHeight = 220;
     return anime.timeline().add({
       targets: '.moduleList',
       duration: 0,
@@ -217,19 +209,5 @@ export class ModuleHandlerComponent implements OnInit {
       this.animationRunning = false;
       this.openModuleList();
     });
-  }
-
-  /**
-   * Returns the screen width in pixels
-   */
-  getScreenWidth() {
-    return screen.width;
-  }
-
-  /**
-   * Returns the screen height in pixels
-   */
-  getScreenHeight() {
-    return screen.height;
   }
 }

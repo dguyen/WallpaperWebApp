@@ -11,29 +11,13 @@
 
 		<div id='settingContainer'>	
 			<div class='moduleList'>
-				<ul>
-					<li *ngFor='let module of moduleList'
-						(click)='selectModule(module)'>
-					{{ module.name }}</li>
-				</ul>
+				<app-select-setting [moduleList]="moduleList" (moduleSelected)="selectModule($event)"></app-select-setting>
 			</div>
 			<div class="moduleSettings">
-				<div class="range-slider" id="xController">
-					<label>X Position</label>
-					<input class="range-slider__range" [(ngModel)]="selectedModule.xPos" (ngModelChange)="updateModuleUI(selectedModule)" (change)="onModuleChange()" type="range" min="0" max="{{ getScreenWidth() }}">
-					<span class="range-slider__value">{{ selectedModule.xPos }}</span>
-				</div> 
-				<div class="range-slider" id="yController">
-					<label>Y Position</label>
-					<input class="range-slider__range" [(ngModel)]="selectedModule.yPos" (ngModelChange)="updateModuleUI(selectedModule)" (change)="onModuleChange()" type="range" min="0" max="{{ getScreenHeight() }}">
-					<span class="range-slider__value">{{ selectedModule.yPos }}</span>
-				</div>				
-				<div class="checkbox">
-					<label><input class='enableCheckbox' type="checkbox" [(ngModel)]="selectedModule.enabled" (change)="onModuleChange()">Enable {{ selectedModule.name }} module</label>
-				</div>
+				<app-generic-module-settings [selectedModule]="selectedModule"></app-generic-module-settings>
 			</div>		
 		</div>
 	</div>
-	<app-weather-module id='weatherModule'></app-weather-module>
-	<app-spotify-module id='spotifyModule'></app-spotify-module>
+	<app-weather-module class="module" id='weatherModule'></app-weather-module>
+	<app-spotify-module class="module" id='spotifyModule'></app-spotify-module>
 </div>
