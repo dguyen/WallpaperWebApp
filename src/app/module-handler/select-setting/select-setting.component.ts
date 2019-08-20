@@ -8,7 +8,7 @@ import { Module } from '../../_services/module-storage/module';
 })
 export class SelectSettingComponent {
   @Input() moduleList: [];
-  @Output() moduleSelected = new EventEmitter<Module>(); // Todo replace with some class?
+  @Output() moduleSelected = new EventEmitter<Module>();
 
   constructor() { }
 

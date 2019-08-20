@@ -13,6 +13,9 @@ import { WeatherService } from './_services/weather.service';
   providers: [
     WeatherService
   ],
+  entryComponents: [
+    WeatherModuleComponent,
+  ],
   exports: [
     WeatherModuleComponent
   ]

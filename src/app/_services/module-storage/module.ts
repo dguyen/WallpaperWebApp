@@ -1,6 +1,6 @@
 export class Module {
   name: string;
-  id: string;
+  selector: string;
   xPos = 0;
   yPos = 0;
   enabled: boolean;

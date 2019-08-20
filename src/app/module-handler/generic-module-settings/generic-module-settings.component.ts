@@ -17,8 +17,9 @@ export class GenericModuleSettingsComponent {
    * @param newValue new module values
    */
   updateModuleUI(newValue: Module) {
-    const moduleRef = document.getElementById(newValue.id);
+    const moduleRef = <HTMLElement>document.querySelector(newValue.selector);
     moduleRef.style.display = newValue.enabled ? 'inline-block' : 'none';
+    moduleRef.style.position = 'absolute';
     moduleRef.style.top = newValue.yPos + 'px';
     moduleRef.style.left = newValue.xPos + 'px';
   }

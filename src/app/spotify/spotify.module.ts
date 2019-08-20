@@ -21,6 +21,9 @@ import { SelectDeviceComponent } from './spotify-module/select-device/select-dev
   providers: [
     SpotifyService
   ],
+  entryComponents: [
+    SpotifyModuleComponent
+  ],
   exports: [
     SpotifyModuleComponent
   ]

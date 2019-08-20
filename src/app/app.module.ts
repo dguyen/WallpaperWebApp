@@ -14,6 +14,9 @@ import { GenericModuleSettingsComponent } from './module-handler/generic-module-
 import { SpotifyModule } from './spotify/spotify.module';
 import { WeatherModule } from './weather/weather.module';
 
+// Directives
+import { ModuleDirective } from './module-handler/module.directive';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +24,7 @@ import { WeatherModule } from './weather/weather.module';
     AppSettingsComponent,
     SelectSettingComponent,
     GenericModuleSettingsComponent,
+    ModuleDirective,
   ],
   imports: [
     BrowserModule,

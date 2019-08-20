@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
+import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
+import { ModuleDirective } from './module.directive';
 import { Module } from '../_services/module-storage/module';
 import * as anime from 'animejs';
+
+// Services
+import { ModulesListService } from '../modules-list.service';
+import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
 
 @Component({
   selector: 'app-module-handler',
@@ -10,28 +14,33 @@ import * as anime from 'animejs';
 })
 
 export class ModuleHandlerComponent implements OnInit {
+  @ViewChild(ModuleDirective) appModule: ModuleDirective;
   settingsVisible = false;
   animationRunning = false;
   showBackButton = false;
   selectedModule = new Module;
   moduleList = [];
-  linkedModules = [
-    'weather',
-    'spotify'
-  ];
 
-  constructor(public _moduleStorage: ModuleStorageService) { }
+  constructor(
+    public _moduleStorage: ModuleStorageService,
+    private _moduleListService: ModulesListService,
+    private compFactoryResolver: ComponentFactoryResolver) {}
+
 
   ngOnInit() {
     this.loadStorage();
-    this.initModules(this.moduleList);
+    this.loadModules();
+    this.updateModulesUI(this.moduleList);
   }
 
+  /**
+   * Load data from storage into application
+   */
   loadStorage() {
     const storageHolder = this._moduleStorage.getModules();
 
     if (!storageHolder) { // Cache not found
-      this._moduleStorage.setupStorage(this.linkedModules);
+      this._moduleStorage.setupStorage(this._moduleListService.getModules());
       this.moduleList = this._moduleStorage.getModules();
     } else { // Cache found
       this.moduleList = storageHolder;
@@ -42,9 +51,23 @@ export class ModuleHandlerComponent implements OnInit {
    * Initializes the loaded modules
    * @param modules list of modules
    */
-  initModules(modules) {
+  updateModulesUI(modules: Module[]) {
     modules.forEach(moduleItem => {
       this.updateModuleUI(moduleItem);
+    });
+  }
+
+  /**
+   * Loads all the modules linked in modules-list
+   */
+  loadModules() {
+    this.appModule.viewContainerRef.clear();
+    const listOfAppModules = this._moduleListService.getModules();
+
+    listOfAppModules.forEach(aModule => {
+      const compFactory = this.compFactoryResolver.resolveComponentFactory(aModule.component);
+      const viewContainerRef = this.appModule.viewContainerRef;
+      viewContainerRef.createComponent(compFactory);
     });
   }
 
@@ -53,8 +76,9 @@ export class ModuleHandlerComponent implements OnInit {
    * @param newValue new module values
    */
   updateModuleUI(newValue: Module) {
-    const moduleRef = document.getElementById(newValue.id);
+    const moduleRef = <HTMLElement>document.querySelector(newValue.selector);
     moduleRef.style.display = newValue.enabled ? 'inline-block' : 'none';
+    moduleRef.style.position = 'absolute';
     moduleRef.style.top = newValue.yPos + 'px';
     moduleRef.style.left = newValue.xPos + 'px';
   }
@@ -154,7 +178,7 @@ export class ModuleHandlerComponent implements OnInit {
     if (this.animationRunning) { return; }
     this.animationRunning = true;
     this.showBackButton = true;
-    const settingHeight = 220;
+    const settingHeight = 205;
     return anime.timeline().add({
       targets: '.moduleList',
       duration: 0,

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
+import { ModuleItem } from './../../modules-list.service';
 import { Module } from './module';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class ModuleStorageService {
    * @param newValues updated values to be stored
    */
   updateModule(newModule: Module) {
-    const tmp = this.moduleList.findIndex(x => x.id === newModule.id);
+    const tmp = this.moduleList.findIndex(x => x.name === newModule.name);
     this.moduleList[tmp] = newModule;
     this.storageService.setStorage('moduleList', {
       moduleList: this.moduleList
@@ -37,12 +38,12 @@ export class ModuleStorageService {
    * Setup storage if no values currently reside in storage
    * @param listOfModules a list of modules to have values generated for
    */
-  setupStorage(listOfModules: Array<string>) {
+  setupStorage(listOfModules: Array<ModuleItem>) {
     const moduleList = [];
-    listOfModules.forEach(moduleName => {
+    listOfModules.forEach(moduleDetails => {
       moduleList.push({
-        name: moduleName,
-        id: moduleName + 'Module',
+        name: moduleDetails.data.name,
+        selector: moduleDetails.data.selector,
         xPos: 300,
         yPos: 300,
         enabled: true
@@ -51,5 +52,6 @@ export class ModuleStorageService {
     this.storageService.setStorage('moduleList', {
       moduleList: moduleList
     });
+    this.moduleList = moduleList;
   }
 }
