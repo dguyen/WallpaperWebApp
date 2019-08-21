@@ -7,15 +7,21 @@ import * as anime from 'animejs';
 import { ModulesListService } from '../modules-list.service';
 import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
 
+const animationStates = {
+  minimisedView: 'minimisedView',
+  moduleListView: 'moduleListView',
+  moduleSettingView: 'moduleSettingView',
+  appSettingView: 'appSettingView',
+};
+
 @Component({
   selector: 'app-module-handler',
   templateUrl: './module-handler.component.html',
   styleUrls: ['./module-handler.component.scss']
 })
-
 export class ModuleHandlerComponent implements OnInit {
   @ViewChild(ModuleDirective) appModule: ModuleDirective;
-  settingsVisible = false;
+  currentViewState = animationStates.minimisedView;
   animationRunning = false;
   showBackButton = false;
   selectedModule = new Module;
@@ -98,14 +104,10 @@ export class ModuleHandlerComponent implements OnInit {
   togglePanel() {
     if (this.animationRunning) { return; }
     this.showBackButton = false;
-    if (this.settingsVisible) { // Close menu
-      this.closeModuleList().then(() => {
-        this.settingsVisible = false;
-      });
-    } else { // Open menu
-      this.openModuleList().then(() => {
-        this.settingsVisible = true;
-      });
+    if (this.currentViewState === animationStates.minimisedView) { // Open menu list
+      this.openModuleList();
+    } else { // Close currently open view
+      this.minimiseView();
     }
   }
 
@@ -139,16 +141,23 @@ export class ModuleHandlerComponent implements OnInit {
       duration: 50,
       offset: 0,
       opacity: 0
-    }).finished.then(() => this.animationRunning = false);
+    }).finished.then(() => {
+      this.animationRunning = false;
+      this.currentViewState = animationStates.moduleListView;
+    });
   }
 
   /*
-  * Closes the module list
+  * Closes the module list, returning to minimised view
   * @return {Promise} that resolves when animation completes
   */
-  closeModuleList() {
+  minimiseView() {
     if (this.animationRunning) { return; }
     this.animationRunning = true;
+    const currentViewSelector = this.getTarget(this.currentViewState);
+    if (!currentViewSelector) {
+      return;
+    }
     return anime.timeline().add({
       targets: '.controller',
       easing: 'easeOutExpo',
@@ -157,7 +166,7 @@ export class ModuleHandlerComponent implements OnInit {
       height: '44px',
       opacity: 0.4
     }).add({
-      targets: '.moduleList, .moduleSettings',
+      targets: currentViewSelector,
       easing: 'easeOutExpo',
       duration: 0,
       offset: 0,
@@ -167,7 +176,10 @@ export class ModuleHandlerComponent implements OnInit {
       duration: 200,
       offset: 0,
       rotate: '-1turn'
-    }).finished.then(() => this.animationRunning = false);
+    }).finished.then(() => {
+      this.animationRunning = false;
+      this.currentViewState = animationStates.minimisedView;
+    });
   }
 
   /*
@@ -208,8 +220,55 @@ export class ModuleHandlerComponent implements OnInit {
       offset: 0,
       translateX: 255,
       rotate: '3turn'
-    }).finished.then(() => this.animationRunning = false);
+    }).finished.then(() => {
+      this.animationRunning = false;
+      this.currentViewState = animationStates.moduleSettingView;
+    });
   }
+
+  /**
+   * Open application settings page
+   */
+  openAppSetting() {
+    if (this.animationRunning) { return; }
+    this.animationRunning = true;
+    this.showBackButton = true;
+    const settingHeight = 180;
+    return anime.timeline().add({
+      targets: '.moduleList',
+      duration: 0,
+      height: 0
+    }).add({
+      targets: '.appSettings',
+      easing: 'easeOutExpo',
+      duration: 250,
+      offset: 0,
+      height: settingHeight
+    }).add({
+      targets: '.controller',
+      easing: 'easeOutExpo',
+      duration: 250,
+      offset: 0,
+      height: settingHeight + 62.5
+    }).add({
+      targets: '.backContainer',
+      easing: 'easeOutExpo',
+      duration: 150,
+      offset: 0,
+      opacity: 1
+    }).add({
+      targets: '.gearContainer',
+      duration: 250,
+      easing: 'easeOutExpo',
+      offset: 0,
+      translateX: 255,
+      rotate: '3turn'
+    }).finished.then(() => {
+      this.animationRunning = false;
+      this.currentViewState = animationStates.appSettingView;
+    });
+  }
+
 
   /*
   * Go back from module settings to module list
@@ -219,8 +278,12 @@ export class ModuleHandlerComponent implements OnInit {
     if (this.animationRunning) { return; }
     this.animationRunning = true;
     this.showBackButton = false;
+    const selector = this.getTarget(this.currentViewState);
+    if (!selector) {
+      return;
+    }
     return anime.timeline().add({
-      targets: '.moduleSettings',
+      targets: selector,
       easing: 'easeOutExpo',
       duration: 50,
       height: 0
@@ -233,5 +296,21 @@ export class ModuleHandlerComponent implements OnInit {
       this.animationRunning = false;
       this.openModuleList();
     });
+  }
+
+  /**
+   * Returns the relevant selector for an animation state
+   * @param view an animation state
+   */
+  getTarget(view: string) {
+    switch (view) {
+      case animationStates.moduleListView:
+        return '.moduleList';
+      case animationStates.moduleSettingView:
+        return '.moduleSettings';
+      case animationStates.appSettingView:
+        return '.appSettings';
+      default: return null;
+    }
   }
 }

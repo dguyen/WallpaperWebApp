@@ -56,16 +56,16 @@
 }
 
 .disabledModule:hover {
-  background-color: rgb(194, 42, 42);
+  background-color: rgb(211, 65, 65);
   transition: 0.25s ease-in;
 }
 
 .disabledModule:active {
-  background-color: rgb(194, 42, 42);
+  background-color: rgb(180, 19, 19);
 }
 
 #clearDataBtn {
-  background-color: #e2871e;
+  background-color: #ff6700;
   width: 70px;
   height: 23px;
   line-height: 21.5px;
@@ -73,11 +73,11 @@
 }
 
 #clearDataBtn:hover {
-  background-color: #df943f;
+  background-color: #f87e2d;
 }
 
 #clearDataBtn:active {
-  background-color: #e28113;
+  background-color: #da5700;
 }
 
 /*

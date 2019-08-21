@@ -11,11 +11,14 @@
 
 		<div id='settingContainer'>	
 			<div class='moduleList'>
-				<app-select-setting [moduleList]="moduleList" (moduleSelected)="selectModule($event)"></app-select-setting>
+				<app-select-setting [moduleList]="moduleList" (appSettingSelected)="openAppSetting()" (moduleSelected)="selectModule($event)"></app-select-setting>
 			</div>
 			<div class="moduleSettings">
 				<app-generic-module-settings [selectedModule]="selectedModule"></app-generic-module-settings>
-			</div>		
+			</div>
+			<div class="appSettings">
+				<app-settings></app-settings>
+			</div>
 		</div>
 	</div>
 	<ng-template appModule class="moduleContainer"></ng-template>

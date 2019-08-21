@@ -1,5 +1,5 @@
 <ul>
-  <li>Application Settings</li>
+  <li (click)='appSettingSelected.emit()'>Application Settings</li>
   <li *ngFor='let module of moduleList'
     (click)='selectModule(module)'>
   {{ module.name }}</li>

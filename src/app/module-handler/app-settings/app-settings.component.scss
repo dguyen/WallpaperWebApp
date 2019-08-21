@@ -1,0 +1,150 @@
+#title {
+  text-align: center;
+  margin: 0px 0px 12.5px 0px;
+}
+
+.settingItem {
+	margin: 5px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  #settingTitle {
+    text-align: center;
+    margin: 0;
+  }
+}
+
+#multiButton {
+  width: 200px;
+  height: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  background-color:	#1b4e96;
+  border-radius: 15px;
+  margin: 5px auto 0 auto;
+
+  div {
+    flex-grow: 1;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.25s ease-in;
+    line-height: 15px;
+  }
+
+  div:hover {
+    background-color:	#376db9;
+  }
+  
+  div:active {
+    background-color:	#0e438d;
+    transition: none;
+  }
+
+  div:nth-child(1) {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  div:nth-child(3) {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+}
+
+#fileInput {
+  display: none;
+}
+
+.rangeSliderRange {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+	width: 250px;
+  height: 5px;
+  margin: 9px auto 0 auto;
+  border-radius: 1.5px;
+	background: #d7dcdf;
+	outline: none;
+}
+
+.resetButton {
+  background-color: #ff6700;
+  width: 150px;
+  height: 23px;
+  line-height: 21.5px;
+  font-size: 13px;
+  border-radius: 25px;
+  transition: 0.25s ease-in;
+  margin: 7.5px auto 7.5px auto;
+  font-weight: bold;
+  text-align: center;
+}
+
+.resetButton:hover {
+  background-color: #f87e2d;
+}
+
+.resetButton:active {
+  background-color: #da5700;
+  transition: none;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb {
+  -moz-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange:active::-moz-range-thumb {
+	background: #0ff3c5;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange:active::-webkit-slider-thumb {
+	background: #0ff3c5;
+}

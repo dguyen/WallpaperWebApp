@@ -1,1 +1,31 @@
-<p>Todo</p>
+<h3 id="title">Application Settings</h3>
+<div class="settingItem">
+  <h5 id="settingTitle">Background</h5>
+
+  <div id="multiButton">
+    <div (click)="configHexBackground()">hex</div>
+    <div onclick="document.getElementById('fileInput').click()">file</div>
+    <div (click)="configUrlBackground()">url</div>
+  </div>
+</div>
+
+<div class="settingItem">
+  <h5 id="settingTitle">Setting Icon Opacity</h5>
+  <input
+    class="rangeSliderRange" 
+    [(ngModel)]="iconOpacity"
+    (change)="updateIcon()"
+    type="range" min="0" max="100"
+  />
+</div>
+
+<div class="resetButton" (click)="resetApplication()">Reset application</div>
+
+<input 
+  type="file" 
+  id="fileInput" 
+  (change)="configFileBackground($event)"
+  accept="image/*"
+/>
+
+<img style="display: none" id="imageTester"/>

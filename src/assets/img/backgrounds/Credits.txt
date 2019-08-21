@@ -1,0 +1,7 @@
+Image sources
+--------------------------
+
+Default_background.jpg
+  - Description: 'Scenic photo of lake surrounded by trees'
+  - Author: Roberto Shumski
+  - ImageURL: https://www.pexels.com/photo/scenic-photo-of-lake-surrounded-by-trees-1903702/
