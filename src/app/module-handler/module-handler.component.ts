@@ -6,6 +6,7 @@ import * as anime from 'animejs';
 // Services
 import { ModulesListService } from '../modules-list.service';
 import { ModuleStorageService } from '../_services/module-storage/module-storage.service';
+import { AppSettingsService } from '../_services/app-settings/app-settings.service';
 
 const animationStates = {
   minimisedView: 'minimisedView',
@@ -22,6 +23,7 @@ const animationStates = {
 export class ModuleHandlerComponent implements OnInit {
   @ViewChild(ModuleDirective) appModule: ModuleDirective;
   currentViewState = animationStates.minimisedView;
+  minimisedOpacity: number;
   animationRunning = false;
   showBackButton = false;
   selectedModule = new Module;
@@ -30,10 +32,12 @@ export class ModuleHandlerComponent implements OnInit {
   constructor(
     public _moduleStorage: ModuleStorageService,
     private _moduleListService: ModulesListService,
+    private _appSetting: AppSettingsService,
     private compFactoryResolver: ComponentFactoryResolver) {}
 
 
   ngOnInit() {
+    this.setupOpacityListener();
     this.loadStorage();
     this.loadModules();
     this.updateModulesUI(this.moduleList);
@@ -51,6 +55,17 @@ export class ModuleHandlerComponent implements OnInit {
     } else { // Cache found
       this.moduleList = storageHolder;
     }
+  }
+
+  /**
+   * Setup a listener for opacity changes
+   */
+  setupOpacityListener() {
+    this._appSetting.opacityUpdate.subscribe((data: number) => {
+      if (data != null) {
+        this.updateIconOpacity(data);
+      }
+    });
   }
 
   /**
@@ -119,7 +134,7 @@ export class ModuleHandlerComponent implements OnInit {
     if (this.animationRunning) { return; }
     this.animationRunning = true;
     return anime.timeline().add({
-      targets: '.controller',
+      targets: '#controller',
       easing: 'easeOutExpo',
       duration: 250,
       width: '300px',
@@ -159,12 +174,12 @@ export class ModuleHandlerComponent implements OnInit {
       return;
     }
     return anime.timeline().add({
-      targets: '.controller',
+      targets: '#controller',
       easing: 'easeOutExpo',
       duration: 200,
       width: '44px',
       height: '44px',
-      opacity: 0.4
+      opacity: this.minimisedOpacity
     }).add({
       targets: currentViewSelector,
       easing: 'easeOutExpo',
@@ -202,7 +217,7 @@ export class ModuleHandlerComponent implements OnInit {
       offset: 0,
       height: settingHeight
     }).add({
-      targets: '.controller',
+      targets: '#controller',
       easing: 'easeOutExpo',
       duration: 250,
       offset: 0,
@@ -245,7 +260,7 @@ export class ModuleHandlerComponent implements OnInit {
       offset: 0,
       height: settingHeight
     }).add({
-      targets: '.controller',
+      targets: '#controller',
       easing: 'easeOutExpo',
       duration: 250,
       offset: 0,
@@ -312,5 +327,16 @@ export class ModuleHandlerComponent implements OnInit {
         return '.appSettings';
       default: return null;
     }
+  }
+
+  /**
+   * Update the icon opacity when setting is minimised
+   * @param opacity number between 0 - 1
+   */
+  updateIconOpacity(opacity: number) {
+    if (this.currentViewState === animationStates.minimisedView) {
+      document.getElementById('controller').style.opacity = opacity.toString();
+    }
+    this.minimisedOpacity = opacity;
   }
 }

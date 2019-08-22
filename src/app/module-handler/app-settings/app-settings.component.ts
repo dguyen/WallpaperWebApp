@@ -1,15 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
-import { StorageService } from 'src/app/_services/storage/storage.service';
-
-export class ApplicationSettings {
-  iconOpacity: number;
-  background = {
-    type: 'file',
-    hex: '#000000',
-    file: './assets/img/backgrounds/default_background.jpg',
-    url: ''
-  };
-}
+import { AppSettingsService, BackgroundType, BackgroundData } from 'src/app/_services/app-settings/app-settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -17,59 +7,29 @@ export class ApplicationSettings {
   styleUrls: ['./app-settings.component.scss']
 })
 export class AppSettingsComponent {
-  private appSettings: ApplicationSettings;
-  private storageRef = 'appSettings';
-  private backgroundQuery = '.wholePage';
-  private iconOpacity = 0;
+  iconOpacity = 0;
 
-  constructor(
-    private _storageService: StorageService,
-    private elementRef: ElementRef
-  ) {
-    this.loadStorage();
-    this.updateAppSettings(this.appSettings);
-  }
-
-  /**
-   * Loads application settings from storage, if doesn't exist, create default settings
-   */
-  loadStorage() {
-    this.appSettings = this._storageService.getStorageJSON(this.storageRef);
-    if (!this.appSettings) {
-      this._storageService.setStorage(this.storageRef, new ApplicationSettings);
-      this.loadStorage();
-    }
-    this.iconOpacity = this.appSettings.iconOpacity;
-    this.setBackground(this.appSettings);
-  }
-
-  /**
-   * Update the application settings
-   * @param newSettings the new settings
-   */
-  updateAppSettings(newSettings: ApplicationSettings) {
-    this._storageService.setStorage(this.storageRef, newSettings);
+  constructor(public elementRef: ElementRef, private _appSettingsService: AppSettingsService) {
+    this._appSettingsService.init(elementRef);
+    this.iconOpacity = this._appSettingsService.getIconOpacity() * 100;
   }
 
   /**
    * Updates the setting icon opacity when minimised
    */
   updateIcon() {
-    this.appSettings.iconOpacity = this.iconOpacity / 100;
-    this.updateAppSettings(this.appSettings);
-    // Todo: Update icon opacity on startup
+    this._appSettingsService.updateIcon(this.iconOpacity / 100);
   }
 
   /**
    * Reset the whole application
    */
   resetApplication() {
-    // Todo: Add reset application button script
-    console.log('Todo: Add reset application button script');
+    this._appSettingsService.resetApplication();
   }
 
   /**
-   * Set the input file into local storage and as the background
+   * Set the input file into localstorage and as the background
    */
   configFileBackground(data: any) {
     const newFile = data.target.files[0];
@@ -81,9 +41,7 @@ export class AppSettingsComponent {
       if (!e.target['result']) {
         throw new Error('Invalid file');
       }
-      this.appSettings.background.type = 'file';
-      this.appSettings.background.file = e.target['result'];
-      this.setBackground(this.appSettings);
+      this._appSettingsService.setBackground(new BackgroundData(BackgroundType.FILE, e.target['result']));
     };
     reader.readAsDataURL(newFile);
   }
@@ -104,9 +62,7 @@ export class AppSettingsComponent {
       return;
     };
     imageRef.onload = () => {
-      this.appSettings.background.type = 'url';
-      this.appSettings.background.url = urlPrompt;
-      this.setBackground(this.appSettings);
+      this._appSettingsService.setBackground(new BackgroundData(BackgroundType.URL, urlPrompt));
     };
   }
 
@@ -120,49 +76,9 @@ export class AppSettingsComponent {
     }
     const isHexColor  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexColor);
     if (isHexColor) {
-      this.appSettings.background.type = 'hex';
-      this.appSettings.background.hex = hexColor;
-      this.setBackground(this.appSettings);
+      this._appSettingsService.setBackground(new BackgroundData(BackgroundType.HEX, hexColor));
     } else {
       alert('Hex color is invalid. For more information visit https://www.w3schools.com/colors/colors_picker.asp');
-    }
-  }
-
-  /**
-   * Set the background of the application
-   * @param appSetting the application settings with background details inside
-   */
-  setBackground(appSetting: ApplicationSettings) {
-    const bgDetails = appSetting.background;
-    const bgRefStyle = this.elementRef.nativeElement.ownerDocument.querySelector(this.backgroundQuery).style;
-    bgRefStyle.backgroundRepeat = 'no-repeat';
-    bgRefStyle.backgroundSize = 'cover';
-
-    switch (bgDetails.type) {
-      case 'hex':
-        bgRefStyle.backgroundImage = null;
-        bgRefStyle.backgroundColor = bgDetails.hex;
-        break;
-      case 'file':
-        bgRefStyle.backgroundImage = 'url(' +  bgDetails.file + ')';
-        break;
-      case 'url':
-        bgRefStyle.backgroundImage = 'url(' + bgDetails.url + ')';
-        break;
-      default:
-        throw new Error('Invalid application settings');
-    }
-
-    try {
-      this.updateAppSettings(this.appSettings);
-    } catch (e) {
-      if (bgDetails.type === 'file') {
-        console.log('Todo: Split file into smaller sections and store');
-        // Most likely a file too large error
-        // Break up file into smaller sections
-      } else {
-        throw e;
-      }
     }
   }
 }
