@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { SpotifyService } from '../../_services/spotify.service';
 import { environment } from 'src/environments/environment';
 
@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './setup-spotify.component.html',
   styleUrls: ['./setup-spotify.component.scss']
 })
-export class SetupSpotifyComponent implements OnInit {
+export class SetupSpotifyComponent {
   @Output() spotifyLinked = new EventEmitter();
   setupLink = environment.apiServer + '/setup';
   token = '';
@@ -15,8 +15,6 @@ export class SetupSpotifyComponent implements OnInit {
   errorMsg = '';
 
   constructor(private _spotifyService: SpotifyService) { }
-
-  ngOnInit() {}
 
   /**
    * Copy an element's value onto the user's clipboard

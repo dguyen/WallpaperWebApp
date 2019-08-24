@@ -1,0 +1,44 @@
+<!-- Header -->
+<div id="header">
+  <div id='backContainer' (click)="goBack()">
+    <img id="backIcon" src="./assets/img/baseline_arrow_back_ios_white_18dp.png">
+  </div>
+</div>
+
+<!-- Body -->
+<div id="bodyContainer">
+  <div id="playlists" *ngIf="currentView == ViewStates.PLAYLIST">
+    <ul class="itemList">
+      <li *ngFor="let playlist of playlists" (click)="selectPlaylist(playlist)">
+        <div id='playlistName' [ngClass]="{'selectedItem': playlist.uri === _spotifyService.currentlyPlaying.playlistUri }">{{ playlist.name }}</div>
+      </li>
+    </ul>
+  </div>
+  <div id="songs" *ngIf="currentView == ViewStates.SONGLIST">
+    <ul class="itemList">
+      <li 
+        *ngFor="let i = index; let song of selectedPlaylist.tracks.items"
+        [ngClass]="{'selectedItem': song.track.uri === _spotifyService.currentlyPlaying.songUri }"
+        (click)='playSong(song.track.uri, selectedPlaylist.uri)'
+      >
+        <div class='songNumber'>
+          <span id='songText'>{{ i + 1 }}</span>
+        </div>
+        <div class='songInfomation'>
+          <span id='songText'>{{ song.track.name }}</span>
+          <div class='songArtists'>
+            <span id='songText'>{{getArtistNames(song.track.artists)}}</span>
+          </div>
+        </div>
+        <div class='songLength'>
+          <span id='songArtists'>{{getDuration(song.track.duration_ms)}}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<div id="musicController">
+  <app-media-controller></app-media-controller>
+</div>

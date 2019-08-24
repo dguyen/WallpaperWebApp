@@ -1,59 +1,6 @@
 <div id="container">
-	<div id="header">
-		<div id='backContainer' *ngIf="currentView === 'songView'" (click)="changeView('playlistView')">
-			<img id="backIcon" src="./assets/img/baseline_arrow_back_ios_white_18dp.png">
-		</div>	
-	</div>
-
-	<div id="spotifyLogoContainer"> 
-		<img id="spotifyLogo" src="./assets/spotify_module/spotify-logo.png">
-	</div>
-	<div id="loading" *ngIf="loading">
-		<div id="loadingTextContainer">
-			{{ loadingText }}
-		</div>
-	</div>
+	<div id="spotifyLogoContainer"><img id="spotifyLogo" src="./assets/spotify_module/spotify-logo.png"></div>
 	<div id="spotifySetupContainer"><app-setup-spotify (spotifyLinked)="spotifyLinked()"></app-setup-spotify></div>
-	<div id="selectDeviceContainer"><app-select-device (deviceSelected)="deviceSelected()" *ngIf="currentView === 'deviceView'"></app-select-device></div>
-	<div id="spotifyContainer">
-		<div id="bodyContainer">			
-			<div id="playlists" *ngIf="currentView == 'playlistView'">
-				<ul>
-					<li
-						*ngFor="let playlist of playlists" 
-						(click)="selectPlaylist(playlist)">
-						
-						<div id='playlistName' [ngClass]="{'selectedItem': playlist.uri === _spotifyService.currentlyPlaying.playlistUri }">{{ playlist.name }}</div>
-					</li>
-				</ul>
-			</div>
-			<div id="songs" *ngIf="currentView == 'songView'">
-				<ul>
-					<li 
-						*ngFor="let i = index; let song of selectedPlaylist.tracks.items"
-						[ngClass]="{'selectedItem': song.track.uri === _spotifyService.currentlyPlaying.songUri }"
-						(click)='playSong(song.track.uri, selectedPlaylist.uri)'>
-
-						<div class='songNumber'>
-							<span id='songText'>{{ i + 1 }}</span>
-						</div>
-						<div class='songInfomation'>
-							<span id='songText'>{{ song.track.name }}</span>
-							<div class='songArtists'>
-								<span id='songText'>{{getArtistNames(song.track.artists)}}</span>
-							</div>
-						</div>
-						<div class='songLength'>
-							<span id='songArtists'>{{getDuration(song.track.duration_ms)}}</span>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-
-		<!-- Footer -->
-		<div id="musicController">
-			<app-media-controller></app-media-controller>
-		</div> 
-	</div>
+	<div id="selectDeviceContainer"><app-select-device (deviceSelected)="deviceSelected()" *ngIf="currentView === ViewStates.DEVICESELECT"></app-select-device></div>
+	<div id="bigPlayerContainer"><app-big-player *ngIf="currentView === ViewStates.BIGPLAYER"></app-big-player></div>
 </div>
