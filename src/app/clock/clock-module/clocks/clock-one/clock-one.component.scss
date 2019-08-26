@@ -1,0 +1,37 @@
+#clockContainer {
+  min-width: 375px;
+  width: fit-content;
+  width: -moz-fit-content;
+  padding: 0 3em 0 3em;
+  height: 175px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#day {
+  font-size: 2.5em;
+  color: #ccc;
+}
+
+#amPm {
+  font-size: 2em;
+  color: #ccc;
+}
+
+#time {
+  color: white;
+  font-size: 4.5em;
+  line-height: 0.7em;
+}
+
+.border {
+  $border-color: #000;
+  text-shadow:
+   -1px -1px 0 $border-color,  
+    1px -1px 0 $border-color,
+    -1px 1px 0 $border-color,
+     1px 1px 0 $border-color;  
+}

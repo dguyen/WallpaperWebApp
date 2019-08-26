@@ -1,0 +1,10 @@
+<div id="clockContainer">
+  <div id="content">
+    <div id="day">{{ getDateString() }}</div>
+    <div id="clock">
+      <span id="time">{{ getHourMinutes() }}</span>
+      <span id="seconds" *ngIf="clockSettings.showSeconds">{{ getSeconds() }}</span>
+      <span id="amPm" *ngIf="clockSettings.showAmPm">{{ getAmPm() }}</span>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { GenericModuleSettingsComponent } from './module-handler/generic-module-
 // Modules
 import { SpotifyModule } from './spotify/spotify.module';
 import { WeatherModule } from './weather/weather.module';
+import { ClockModule } from './clock/clock.module';
 
 // Directives
 import { ModuleDirective } from './module-handler/module.directive';
@@ -31,7 +32,8 @@ import { ModuleDirective } from './module-handler/module.directive';
     HttpClientModule,
     FormsModule,
     SpotifyModule,
-    WeatherModule
+    WeatherModule,
+    ClockModule,
   ],
   bootstrap: [AppComponent]
 })
