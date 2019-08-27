@@ -1,0 +1,37 @@
+<div id="settingContainer" class="noselect">
+  <div id="exitContainer">
+    <div id="exit">
+      <img src="../../../../assets/img/exit.png" (click)="closeSettings()">          
+    </div>
+  </div>
+
+  <div id="content">
+    <span id="title">Clock Settings</span>
+
+    <div class="settingItem">
+      <h5 id="settingTitle">Clock Style</h5>
+      <div id="selectClock">
+        <div id="leftArrow" (click)="prevClock()">
+          <img src="../../../../assets/img/left_arrow.png">          
+        </div>
+        <div id="currentClock">{{ selectedClock.name }}</div>
+        <div id="rightArrow" (click)="nextClock()">
+          <img src="../../../../assets/img/right_arrow.png">          
+        </div>
+      </div>
+    </div>
+
+    <div class="settingItem">
+      <h5 id="settingTitle">Preferences</h5>
+      <div class="multiButton">
+        <div [ngClass]="{ 'selectedButton': settings.format == timeFormat.hour12 }" (click)="settings.format = timeFormat.hour12; updateSettings()">12 hours</div>
+        <div [ngClass]="{ 'selectedButton': settings.format == timeFormat.hour24 }" (click)="settings.format = timeFormat.hour24; updateSettings()">24 hours</div>
+      </div>
+      <div id="checkboxContainer">
+        <label><input type="checkbox" [(ngModel)]="settings.padHours" (ngModelChange)="updateSettings()"> Pad hours</label>
+        <label><input type="checkbox" [(ngModel)]="settings.showSeconds" (ngModelChange)="updateSettings()"> Show seconds</label>
+        <label><input type="checkbox" [(ngModel)]="settings.showAmPm" (ngModelChange)="updateSettings()"> Show AM/PM</label>
+      </div>
+    </div>
+  </div>
+</div>

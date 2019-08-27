@@ -1,1 +1,4 @@
-<app-clock-one></app-clock-one>
+<app-clock-one (openSetting)="openSetting()" ></app-clock-one>
+<div id="clockSettingContainer">
+  <app-clock-setting id="clockSettings" (closeSetting)="closeSetting()" *ngIf="showSetting"></app-clock-setting>
+</div>

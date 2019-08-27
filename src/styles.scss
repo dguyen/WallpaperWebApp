@@ -7,3 +7,73 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+
+.rangeSliderRange {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+	width: 250px;
+  height: 5px;
+  margin: 9px auto 0 auto;
+  border-radius: 1.5px;
+	background: #d7dcdf;
+	outline: none;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb {
+  -moz-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  outline: none;
+	width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+	background: #1abc9c;
+	cursor: pointer;
+	transition: background 0.15s ease-in-out;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange::-moz-range-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Firefox
+ */
+.rangeSliderRange:active::-moz-range-thumb {
+	background: #0ff3c5;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange::-webkit-slider-thumb:hover {
+	background: #16dab2;
+}
+
+/*
+ * Chrome
+ */
+.rangeSliderRange:active::-webkit-slider-thumb {
+	background: #0ff3c5;
+}

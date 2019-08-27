@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { ClockService, Time } from 'src/app/clock/_services/clock-service/clock.service';
 import { ClockSettings, ClockSettingsService } from 'src/app/clock/_services/clock-settings/clock-settings.service';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./clock-one.component.scss']
 })
 export class ClockOneComponent implements OnDestroy {
+  @Output() openSetting = new EventEmitter();
   private destroySubs = [];
   time: Time;
   clockSettings: ClockSettings;
@@ -43,6 +44,13 @@ export class ClockOneComponent implements OnDestroy {
         }
       })
     ];
+  }
+
+  /**
+   * Open the setting panel
+   */
+  openSettings() {
+    this.openSetting.emit(null);
   }
 
   /**

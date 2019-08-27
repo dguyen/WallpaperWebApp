@@ -16,15 +16,23 @@
   color: #ccc;
 }
 
-#amPm {
-  font-size: 2em;
-  color: #ccc;
-}
+#clock {
+  #time {
+    color: white;
+    font-size: 4.5em;
+    line-height: 0.7em;
+  }
 
-#time {
-  color: white;
-  font-size: 4.5em;
-  line-height: 0.7em;
+  #seconds {
+    color: #ccc;
+    font-size: 2.25em;
+    padding-right: 2px;
+  }
+
+  #amPm {
+    font-size: 2em;
+    color: #ccc;
+  }
 }
 
 .border {
@@ -34,4 +42,26 @@
     1px -1px 0 $border-color,
     -1px 1px 0 $border-color,
      1px 1px 0 $border-color;  
+}
+
+#settingContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.2;
+    padding: 10px 10px 0 0;
+    transition: opacity 0.5s;
+  }
+
+  img:hover {
+    opacity: 0.7;
+  }
+
+  img:active {
+    opacity: 1;
+  }
 }

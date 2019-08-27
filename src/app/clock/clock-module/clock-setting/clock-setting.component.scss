@@ -1,0 +1,134 @@
+#settingContainer {
+  width: 250px;
+  height: fit-content;
+  background-color: #0d0d0d;
+  border-radius: 15px;
+  color: white;
+}
+
+#content {
+  padding-top: 2em;
+  padding-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#title {
+  text-align: center;
+  margin-bottom: 0px;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+#exitContainer {
+  position: relative;
+
+  #exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1em;
+    color: white;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+#selectClock {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  height: 26px;
+
+  div {
+    height: inherit;
+  }
+
+  #leftArrow img, #rightArrow img {
+    width: 26px;
+    margin: auto 0 auto 0;
+  }
+  
+  #currentClock {
+    min-width: 60px;
+    line-height: 24px;
+    font-size: 0.75em;
+  }
+}
+
+.settingItem {
+	margin: 5px 0 2px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  #settingTitle {
+    text-align: center;
+    margin: 0;
+  }
+
+  #checkboxContainer {
+    margin: auto;
+    padding: 5px 0 5px 0;
+    font-size: 0.75em;
+    font-weight: 600;
+
+    label {
+      display: block;
+    }
+  }
+}
+
+.multiButton {
+  width: 150px;
+  height: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  background-color:	#1b4e96;
+  border-radius: 15px;
+  margin: 5px auto 0 auto;
+
+  div {
+    flex-grow: 1;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 15px;
+    transition: none;
+  }
+
+  div:hover {
+    background-color:	rgb(43, 86, 145);
+    transition: 0.15s ease-in;
+  }
+
+  div:active {
+    background-color:	#0f356b;
+    transition: none;
+  }
+
+  div:nth-child(1) {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  div:nth-child(2) {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+}
+
+.selectedButton {
+  background-color: #0f356b;
+  transition: none;
+  color: #c9c9c9;
+}
+
+.selectedButton:hover {
+  background-color: #0f356b !important;
+}
