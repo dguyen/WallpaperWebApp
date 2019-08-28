@@ -1,7 +1,7 @@
 <div id="settingContainer" class="noselect">
   <div id="exitContainer">
     <div id="exit">
-      <img src="../../../../assets/img/exit.png" (click)="closeSettings()">          
+      <img src="./assets/img/exit.png" (click)="closeSettings()">          
     </div>
   </div>
 
@@ -12,11 +12,11 @@
       <h5 id="settingTitle">Clock Style</h5>
       <div id="selectClock">
         <div id="leftArrow" (click)="prevClock()">
-          <img src="../../../../assets/img/left_arrow.png">          
+          <img src="./assets/img/left_arrow.png">          
         </div>
-        <div id="currentClock">{{ selectedClock.name }}</div>
+        <div id="currentClock">{{ selectedClock }}</div>
         <div id="rightArrow" (click)="nextClock()">
-          <img src="../../../../assets/img/right_arrow.png">          
+          <img src="./assets/img/right_arrow.png">          
         </div>
       </div>
     </div>

@@ -1,12 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ClockSettingsService, ClockSettings, TimeFormat } from '../../_services/clock-settings/clock-settings.service';
-
-// Todo add dynamic loading of clocks
-const TMP_CLOCKS = [
-  { name: 'ClockOne' },
-  { name: 'ClockTwo' },
-  { name: 'ClockThree' },
-];
+import { ClockListService } from '../../_services/clock-list/clock-list.service';
 
 @Component({
   selector: 'app-clock-setting',
@@ -17,15 +11,15 @@ export class ClockSettingComponent {
   @Output() closeSetting = new EventEmitter();
   timeFormat = TimeFormat;
   settings: ClockSettings;
-  selectedClock = {
-    name: 'ClockOne'
-  };
-  clocks = TMP_CLOCKS;
+  selectedClock: string;
+  clocks = [];
 
-  constructor(public _clockSettings: ClockSettingsService) {
-    _clockSettings.settingUpdate.subscribe((settings: ClockSettings) => {
+  constructor(public _clockSettings: ClockSettingsService, public _clockList: ClockListService) {
+    this.clocks = _clockList.getClocks().map((clock) => clock.data.name);
+    this._clockSettings.settingUpdate.subscribe((settings: ClockSettings) => {
       if (settings) {
         this.settings = settings;
+        this.selectedClock = settings.clockStyle;
       }
     }).unsubscribe();
   }
@@ -41,7 +35,8 @@ export class ClockSettingComponent {
    * Change the selected clock to the next one in clocks list
    */
   nextClock() {
-    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock.name);
+    if (this.clocks.length <= 1) { return; }
+    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock);
     if (clockIndex + 1 >= this.clocks.length) {
       this.selectedClock = this.clocks[0];
     } else {
@@ -53,7 +48,8 @@ export class ClockSettingComponent {
    * Change the selected clock to the previous one in clocks list
    */
   prevClock() {
-    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock.name);
+    if (this.clocks.length <= 1) { return; }
+    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock);
     if (clockIndex - 1 < 0) {
       this.selectedClock = this.clocks[this.clocks.length - 1];
     } else {

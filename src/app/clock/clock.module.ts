@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ClockDirective } from './clock.directive';
 
 // Components
 import { ClockModuleComponent } from './clock-module/clock-module.component';
@@ -11,10 +12,12 @@ import { ClockSettingComponent } from './clock-module/clock-setting/clock-settin
   declarations: [
     ClockModuleComponent,
     ClockOneComponent,
-    ClockSettingComponent
+    ClockSettingComponent,
+    ClockDirective
   ],
   entryComponents: [
-    ClockModuleComponent
+    ClockModuleComponent,
+    ClockOneComponent,
   ],
   imports: [
     CommonModule,

@@ -8,6 +8,7 @@ export enum TimeFormat {
 }
 
 export interface ClockSettings {
+  clockStyle: string;
   format: TimeFormat;
   padHours: boolean;
   showSeconds: boolean;
@@ -15,6 +16,7 @@ export interface ClockSettings {
 }
 
 const DEFAULT_SETTINGS: ClockSettings = {
+  clockStyle: 'ClockOne',
   format: TimeFormat.hour12,
   padHours: false,
   showSeconds: false,
