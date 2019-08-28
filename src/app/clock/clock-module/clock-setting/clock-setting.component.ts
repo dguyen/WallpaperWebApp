@@ -36,12 +36,14 @@ export class ClockSettingComponent {
    */
   nextClock() {
     if (this.clocks.length <= 1) { return; }
-    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock);
+    const clockIndex = this.clocks.findIndex((clockName) => clockName === this.selectedClock);
     if (clockIndex + 1 >= this.clocks.length) {
       this.selectedClock = this.clocks[0];
     } else {
       this.selectedClock = this.clocks[clockIndex + 1];
     }
+    this.settings.clockStyle = this.selectedClock;
+    this.updateSettings();
   }
 
   /**
@@ -49,12 +51,14 @@ export class ClockSettingComponent {
    */
   prevClock() {
     if (this.clocks.length <= 1) { return; }
-    const clockIndex = this.clocks.findIndex((data) => data.name === this.selectedClock);
+    const clockIndex = this.clocks.findIndex((clockName) => clockName === this.selectedClock);
     if (clockIndex - 1 < 0) {
       this.selectedClock = this.clocks[this.clocks.length - 1];
     } else {
       this.selectedClock = this.clocks[clockIndex - 1];
     }
+    this.settings.clockStyle = this.selectedClock;
+    this.updateSettings();
   }
 
   /**
