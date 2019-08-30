@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { StorageService } from 'src/app/_services/storage/storage.service';
 import { BehaviorSubject } from 'rxjs';
 
-enum DegreeFormat {
+export enum DegreeFormat {
   CELCIUS = 'metric',
   FAHRENHEIT = 'imperial'
 }
@@ -18,7 +18,7 @@ export interface WeatherSettings {
 const DEFAULT_SETTINGS: WeatherSettings = {
   degreesFormat: DegreeFormat.CELCIUS,
   enableBackground: true,
-  country: 'au',
+  country: 'AU',
   zipCode: '3000',
   apiKey: '084b04a1bd24b3a2834390ec8153f9b1'
 };

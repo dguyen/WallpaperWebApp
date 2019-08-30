@@ -1,0 +1,42 @@
+<div id="settingContainer" class="noselect">
+  <div id="exitContainer">
+    <div id="exit">
+      <img src="./assets/img/exit.png" (click)="closeSettings()">          
+    </div>
+  </div>
+
+  <div id="content">
+    <span id="title">Weather Settings</span>
+    <div class="settingItem">
+      <h5 id="settingTitle">Location</h5>
+      <div id="selectLocationContainer">
+        <select [(ngModel)]="selectedCountry" [compareWith]="compareFn">
+          <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
+        </select> 
+
+        <div id="zipCodeContainer">
+          <input type="text" placeholder="ZipCode" [(ngModel)]="zipCode">
+          <div id="updateLocation" (click)="updateLocation()">Update</div>
+        </div>
+      </div>
+      <div id="error">{{ errorMsg }}</div>
+    </div>
+
+    <div class="settingItem">
+      <h5 id="settingTitle">Preferences</h5>
+
+      <div class="multiButton" id="apiKey" (click)="updateApiKey()">
+        <div>Custom API Key</div>
+      </div>
+
+      <div class="multiButton" id="degreeFormat">
+        <div (click)="weatherSettings.degreeFormat = degreesFormat.CELCIUS; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreeFormat === degreesFormat.CELCIUS }">&#8451;</div>
+        <div (click)="weatherSettings.degreeFormat = degreesFormat.FAHRENHEIT; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreeFormat === degreesFormat.FAHRENHEIT }">&#8457;</div>
+      </div>
+
+      <div id="checkboxContainer">
+        <label><input type="checkbox" [(ngModel)]="weatherSettings.enableBackground" (ngModelChange)="updateSettings()">Background</label>
+      </div>
+    </div>
+  </div>
+</div>

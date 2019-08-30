@@ -1,14 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { WeatherService } from './_services/weather-service/weather.service';
+
+// Components
 import { WeatherModuleComponent } from './weather-module/weather-module.component';
-import { WeatherService } from './_services/weather.service';
+import { SetupWeatherComponent } from './weather-module/setup-weather/setup-weather.component';
+
 
 @NgModule({
   declarations: [
-    WeatherModuleComponent
+    WeatherModuleComponent,
+    SetupWeatherComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   providers: [
     WeatherService

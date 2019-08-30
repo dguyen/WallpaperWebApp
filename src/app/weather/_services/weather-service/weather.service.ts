@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { WeatherSettingsService, WeatherSettings } from '../weather-settings/weather-settings.service.js';
+import { Countries } from './countries.js';
 
 @Injectable()
 export class WeatherService {
   weatherReport: any;
-  apiID = '084b04a1bd24b3a2834390ec8153f9b1';
-  units = 'metric';
+  weatherSettings: WeatherSettings;
   initialized: any;
-  zip = '3149,au';
 
-  constructor(private _http: HttpClient) {
-    this.initialized = this.initialize();
+  constructor(private _http: HttpClient, private _weatherSettings: WeatherSettingsService) {
+    this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
+      if (settings) {
+        this.weatherSettings = settings;
+        this.initialized = this.initialize();
+      }
+    });
   }
 
   /*
@@ -23,9 +27,9 @@ export class WeatherService {
     return new Promise((resolve, reject) => {
       this._http.post('https://api.openweathermap.org/data/2.5/forecast', null, {
         params: {
-          zip: this.zip,
-          APPID: this.apiID,
-          units: this.units
+          zip: this.weatherSettings.zipCode + ',' + this.weatherSettings.country,
+          APPID: this.weatherSettings.apiKey,
+          units: this.weatherSettings.degreesFormat
         }
       }).subscribe((res) => {
         this.weatherReport = res;
@@ -34,6 +38,37 @@ export class WeatherService {
         reject(err);
       });
     });
+  }
+
+  /**
+   * Verify the given parameters
+   * @param zipCode (optional) zip code of location
+   * @param country (optional) two letter country code
+   * @param api (optional) api key
+   */
+  verifyParams(
+    zipCode: string = this.weatherSettings.zipCode,
+    country: string = this.weatherSettings.country,
+    api: string = this.weatherSettings.apiKey) {
+
+    return new Promise((resolve, reject) => {
+      this._http.post('https://api.openweathermap.org/data/2.5/forecast', null, {
+        params: {
+          zip: zipCode + ',' + country,
+          APPID: api,
+          units: this.weatherSettings.degreesFormat
+        }
+      }).subscribe((res) => {
+        this.weatherReport = res;
+        resolve();
+      }, (err) => {
+        reject(err);
+      });
+    });
+  }
+
+  getCountries() {
+    return Countries;
   }
 
   /*
