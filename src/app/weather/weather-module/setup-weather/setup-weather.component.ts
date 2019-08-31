@@ -34,7 +34,7 @@ export class SetupWeatherComponent {
   updateLocation() {
     this.weatherSettings.country = this.selectedCountry.code;
     this.weatherSettings.zipCode = this.zipCode;
-    this._weatherService.verifyParams(this.zipCode, this.selectedCountry.code).then(() => {
+    this._weatherService.initialize(this.zipCode, this.selectedCountry.code).then(() => {
       this.updateSettings();
       this.errorMsg = '';
     }).catch((err) => {
@@ -56,7 +56,7 @@ export class SetupWeatherComponent {
   updateApiKey() {
     const apikey = prompt('Enter API Key');
     if (apikey) {
-      this._weatherService.verifyParams(undefined, undefined, apikey).then(() => {
+      this._weatherService.initialize(undefined, undefined, apikey).then(() => {
         this.weatherSettings.apiKey = apikey;
         this.updateSettings();
       }).catch(() => {

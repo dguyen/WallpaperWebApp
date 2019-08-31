@@ -1,0 +1,13 @@
+<div id="table" *ngIf="!isLoading">
+  <div id="row" *ngFor="let day of weekData">
+    <div id="item">{{ day.day }}</div>
+    <div id="item"><i class="{{ day.icon }}"></i></div>
+    <div id="item">{{ day.max }}</div>
+    <div id="item">{{ day.min }}</div>
+  </div>
+</div>
+
+<div id="loading" *ngIf="isLoading">
+  <div id="loadingIcon" class="wi wi-day-sunny"></div>
+  <div>Loading...</div>
+</div>

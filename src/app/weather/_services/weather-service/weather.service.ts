@@ -3,6 +3,40 @@ import { HttpClient } from '@angular/common/http';
 import { WeatherSettingsService, WeatherSettings } from '../weather-settings/weather-settings.service.js';
 import { Countries } from './countries.js';
 
+const MOCKUP_DATA: Day[] = [{
+  day: 'Monday',
+  icon: 'wi wi-day-sunny',
+  max: '27',
+  min: '14'
+}, {
+  day: 'Tuesday',
+  icon: 'wi wi-day-showers',
+  max: '20',
+  min: '12'
+}, {
+  day: 'Wednesday',
+  icon: 'wi wi-day-sleet-storm',
+  max: '10',
+  min: '5'
+}, {
+  day: 'Thursday',
+  icon: 'wi wi-windy',
+  max: '24',
+  min: '14'
+}, {
+  day: 'Friday',
+  icon: 'wi wi-day-sunny',
+  max: '27',
+  min: '13'
+}];
+
+export class Day {
+  day: string;
+  icon: string;
+  max: string;
+  min: string;
+}
+
 @Injectable()
 export class WeatherService {
   weatherReport: any;
@@ -18,35 +52,13 @@ export class WeatherService {
     });
   }
 
-  /*
-  * Obtains new forecast data from the api and sets the data to the variable weatherReport
-  * @param {}
-  * @return {promise} a promise the resolves when successful and rejects when fails
-  */
-  initialize() {
-    return new Promise((resolve, reject) => {
-      this._http.post('https://api.openweathermap.org/data/2.5/forecast', null, {
-        params: {
-          zip: this.weatherSettings.zipCode + ',' + this.weatherSettings.country,
-          APPID: this.weatherSettings.apiKey,
-          units: this.weatherSettings.degreesFormat
-        }
-      }).subscribe((res) => {
-        this.weatherReport = res;
-        resolve();
-      }, (err) => {
-        reject(err);
-      });
-    });
-  }
-
   /**
-   * Verify the given parameters
+   * Obtains new forecast data from the api and sets the data to the variable weatherReport
    * @param zipCode (optional) zip code of location
    * @param country (optional) two letter country code
    * @param api (optional) api key
    */
-  verifyParams(
+  initialize(
     zipCode: string = this.weatherSettings.zipCode,
     country: string = this.weatherSettings.country,
     api: string = this.weatherSettings.apiKey) {
@@ -61,14 +73,24 @@ export class WeatherService {
       }).subscribe((res) => {
         this.weatherReport = res;
         resolve();
-      }, (err) => {
-        reject(err);
-      });
+      }, (err) => reject(err));
     });
   }
 
+  /**
+   * Returns list of countries
+   */
   getCountries() {
     return Countries;
+  }
+
+  /**
+   * Returns a promise that resolves with the weekly forecast
+   */
+  getWeekForecast(): Promise<Day[]> {
+    return new Promise((resolve, reject) => {
+      resolve(MOCKUP_DATA);
+    });
   }
 
   /*
@@ -141,7 +163,7 @@ export class WeatherService {
   * @param {string} an id from the api that represents the type of weather (see NOTE)
   * @return {string} a css class that supplies an image of the weather
   */
-  getWeatherIcon(iconId) {
+  getWeatherIcon(iconId: string) {
     let imgClass = null;
     switch (iconId) {
       // Day
