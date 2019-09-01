@@ -8,6 +8,7 @@ import { WeatherModuleComponent } from './weather-module/weather-module.componen
 import { SetupWeatherComponent } from './weather-module/setup-weather/setup-weather.component';
 import { WeatherListComponent } from './weather-module/weather-list/weather-list.component';
 import { CurrentTempComponent } from './weather-module/current-temp/current-temp.component';
+import { CurrentWeatherRowComponent } from './weather-module/current-weather-row/current-weather-row.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { CurrentTempComponent } from './weather-module/current-temp/current-temp
     SetupWeatherComponent,
     WeatherListComponent,
     CurrentTempComponent,
+    CurrentWeatherRowComponent,
   ],
   imports: [
     CommonModule,

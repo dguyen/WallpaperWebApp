@@ -1,0 +1,7 @@
+<div id="breaker">
+  <div id="location">{{ currentWeather ? currentWeather.location : 'Loading...' }}</div>
+  <div id="minMaxTemp" *ngIf="currentWeather">
+    <div>{{ currentWeather.max }}</div>
+    <div>{{ currentWeather.min }}</div>
+  </div>
+</div>

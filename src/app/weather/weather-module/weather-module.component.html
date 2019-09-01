@@ -2,15 +2,9 @@
 	<img src="./assets/img/baseline_settings_white_18dp.png">
 </div>
 
-<div id="weatherContainer">
+<div id="weatherContainer" [ngClass]="{ 'background': settings && settings.enableBackground }">
 	<div id="tempContainer"><app-current-temp></app-current-temp></div>
-	<div id="breaker" *ngIf="currentWeather">
-		<div id="location">{{ currentWeather.location }}</div>
-		<div id="minMaxTemp">
-			<div>{{ currentWeather.max }}</div>
-			<div>{{ currentWeather.min }}</div>
-		</div>
-	</div>
+	<div id="currWeatherRow"><app-current-weather-row></app-current-weather-row></div>
 	<div id="listContainer"><app-weather-list></app-weather-list></div>
 </div>
 

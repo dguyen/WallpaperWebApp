@@ -1,6 +1,9 @@
 #weatherContainer {
-  background-color: rgba(0, 0, 0, 0.5);
   padding: 1em;
+}
+
+.background {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #weatherSetupContainer {
@@ -16,6 +19,16 @@
   #weatherSetup {
     margin-top: 15%;
   }
+}
+
+#tempContainer {
+  margin-top: 5px;
+  height: 64px;
+}
+
+#currWeatherRow {
+  margin: 5px 0 2px 0;
+  height: 25px;
 }
 
 #settingContainer {
@@ -37,35 +50,6 @@
 
   img:active {
     opacity: 1;
-  }
-}
-
-#breaker {
-  height: 25px;
-  color: white;
-
-
-  #location {
-    float: left;
-    color: rgb(199, 199, 199);
-  }
-  
-  #minMaxTemp {
-    display: flex;
-    justify-content: flex-end;
-    text-align: right;
-    float: right;
-    width: 75px;
-
-    div:first-child {
-      width: 20px;
-    }
-    
-    div:last-child {
-      width: 20px;
-      padding-left: 23px;
-      color: rgb(207, 207, 207);
-    }
   }
 }
 

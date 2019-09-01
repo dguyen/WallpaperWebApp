@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WeatherService, CurrentWeather } from '../_services/weather-service/weather.service';
+import { WeatherSettings, WeatherSettingsService } from '../_services/weather-settings/weather-settings.service';
 import * as anime from 'animejs';
 
 @Component({
@@ -12,14 +12,12 @@ import * as anime from 'animejs';
 
 export class WeatherModuleComponent {
   showSetting = false;
-  currentWeather: CurrentWeather;
+  settings: WeatherSettings;
 
-  constructor(public _weatherService: WeatherService) {
-    this._weatherService.weatherUpdates.subscribe((hasUpdated) => {
-      if (hasUpdated) {
-        this._weatherService.getCurrentForecast().then((forecast: CurrentWeather) => {
-          this.currentWeather = forecast;
-        });
+  constructor(public _weatherSettings: WeatherSettingsService) {
+    this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
+      if (settings) {
+        this.settings = settings;
       }
     });
   }
