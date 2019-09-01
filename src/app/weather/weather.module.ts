@@ -7,13 +7,14 @@ import { WeatherService } from './_services/weather-service/weather.service';
 import { WeatherModuleComponent } from './weather-module/weather-module.component';
 import { SetupWeatherComponent } from './weather-module/setup-weather/setup-weather.component';
 import { WeatherListComponent } from './weather-module/weather-list/weather-list.component';
-
+import { CurrentTempComponent } from './weather-module/current-temp/current-temp.component';
 
 @NgModule({
   declarations: [
     WeatherModuleComponent,
     SetupWeatherComponent,
     WeatherListComponent,
+    CurrentTempComponent,
   ],
   imports: [
     CommonModule,

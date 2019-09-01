@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { WeatherSettingsService, WeatherSettings } from '../weather-settings/weather-settings.service.js';
+import { BehaviorSubject } from 'rxjs';
 import { Countries } from './countries.js';
 
 const MOCKUP_DATA: Day[] = [{
@@ -30,6 +31,22 @@ const MOCKUP_DATA: Day[] = [{
   min: '13'
 }];
 
+const MOCKUP_DATA_2: CurrentWeather = {
+  min: '22',
+  max: '39',
+  current: '35',
+  icon: 'wi wi-day-snow ',
+  location: 'Glen Waverley'
+};
+
+export interface CurrentWeather {
+  min: string;
+  max: string;
+  current: string;
+  icon: string;
+  location: string;
+}
+
 export class Day {
   day: string;
   icon: string;
@@ -40,14 +57,18 @@ export class Day {
 @Injectable()
 export class WeatherService {
   weatherReport: any;
+  weatherUpdates = new BehaviorSubject<boolean>(null);
   weatherSettings: WeatherSettings;
-  initialized: any;
 
   constructor(private _http: HttpClient, private _weatherSettings: WeatherSettingsService) {
     this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
       if (settings) {
         this.weatherSettings = settings;
-        this.initialized = this.initialize();
+        this.initialize().then(() => {
+          this.weatherUpdates.next(true);
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     });
   }
@@ -90,6 +111,15 @@ export class WeatherService {
   getWeekForecast(): Promise<Day[]> {
     return new Promise((resolve, reject) => {
       resolve(MOCKUP_DATA);
+    });
+  }
+
+  /**
+   * Returns a promise that resolves with the current weather
+   */
+  getCurrentForecast(): Promise<CurrentWeather> {
+    return new Promise((resolve, reject) => {
+      resolve(MOCKUP_DATA_2);
     });
   }
 

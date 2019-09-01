@@ -1,0 +1,16 @@
+@import '../../../../assets/weather_icon/css/weather-icons.min.css';
+
+#tempContainer {
+  display: flex;
+  align-items: center;
+  color: white;
+
+  i {
+    font-size: 2em;
+    margin-right: 5px;
+  }
+
+  #tempText {
+    font-size: 3em;
+  }
+}
