@@ -9,11 +9,16 @@ This project, developed using [Angular](https://angular.io/), is aimed to integr
 
 For example, instead of having a screen with Spotify open, you could have a simplified widget integrated into your background enabling you to perform the same functions but without the application.
 
+## Demo
+
+A video demonstrating the application can be found [here](https://streamable.com/z0ll6)
+
 ## Project Status
 
 The application currently features:
  - Weather Module
  - Spotify Module
+ - Clock Module
 
 More modules are being developed!
 
