@@ -3,7 +3,7 @@ import { StorageService } from 'src/app/_services/storage/storage.service';
 import { BehaviorSubject } from 'rxjs';
 
 export enum DegreeFormat {
-  CELCIUS = 'metric',
+  CELSIUS = 'metric',
   FAHRENHEIT = 'imperial'
 }
 
@@ -16,7 +16,7 @@ export interface WeatherSettings {
 }
 
 const DEFAULT_SETTINGS: WeatherSettings = {
-  degreesFormat: DegreeFormat.CELCIUS,
+  degreesFormat: DegreeFormat.CELSIUS,
   enableBackground: true,
   country: 'AU',
   zipCode: '3000',

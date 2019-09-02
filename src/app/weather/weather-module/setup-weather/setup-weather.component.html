@@ -30,8 +30,8 @@
       </div>
 
       <div class="multiButton" id="degreeFormat">
-        <div (click)="weatherSettings.degreeFormat = degreesFormat.CELCIUS; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreeFormat === degreesFormat.CELCIUS }">&#8451;</div>
-        <div (click)="weatherSettings.degreeFormat = degreesFormat.FAHRENHEIT; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreeFormat === degreesFormat.FAHRENHEIT }">&#8457;</div>
+        <div (click)="weatherSettings.degreesFormat = degreesFormat.CELSIUS; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreesFormat === degreesFormat.CELSIUS }">&deg;C</div>
+        <div (click)="weatherSettings.degreesFormat = degreesFormat.FAHRENHEIT; updateSettings()" [ngClass]="{ 'selectedButton': weatherSettings.degreesFormat === degreesFormat.FAHRENHEIT }">&deg;F</div>
       </div>
 
       <div id="checkboxContainer">
