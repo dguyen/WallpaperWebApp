@@ -1,43 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { WeatherSettingsService, WeatherSettings } from '../weather-settings/weather-settings.service.js';
+import { WeatherSettingsService, WeatherSettings, DegreeFormat } from '../weather-settings/weather-settings.service.js';
 import { BehaviorSubject } from 'rxjs';
 import { Countries } from './countries.js';
-
-const MOCKUP_DATA: Day[] = [{
-  day: 'Monday',
-  icon: 'wi wi-day-sunny',
-  max: '27',
-  min: '14'
-}, {
-  day: 'Tuesday',
-  icon: 'wi wi-day-showers',
-  max: '20',
-  min: '12'
-}, {
-  day: 'Wednesday',
-  icon: 'wi wi-day-sleet-storm',
-  max: '10',
-  min: '5'
-}, {
-  day: 'Thursday',
-  icon: 'wi wi-windy',
-  max: '24',
-  min: '14'
-}, {
-  day: 'Friday',
-  icon: 'wi wi-day-sunny',
-  max: '27',
-  min: '13'
-}];
-
-const MOCKUP_DATA_2: CurrentWeather = {
-  min: '22',
-  max: '39',
-  current: '35',
-  icon: 'wi wi-day-snow ',
-  location: 'Glen Waverley'
-};
 
 export interface CurrentWeather {
   min: string;
@@ -59,6 +24,7 @@ export class WeatherService {
   weatherReport: any;
   weatherUpdates = new BehaviorSubject<boolean>(null);
   weatherSettings: WeatherSettings;
+  currentForecast: CurrentWeather;
 
   constructor(private _http: HttpClient, private _weatherSettings: WeatherSettingsService) {
     this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
@@ -89,7 +55,6 @@ export class WeatherService {
         params: {
           zip: zipCode + ',' + country,
           APPID: api,
-          units: this.weatherSettings.degreesFormat
         }
       }).subscribe((res) => {
         this.weatherReport = res;
@@ -109,8 +74,17 @@ export class WeatherService {
    * Returns a promise that resolves with the weekly forecast
    */
   getWeekForecast(): Promise<Day[]> {
-    return new Promise((resolve, reject) => {
-      resolve(MOCKUP_DATA);
+    return new Promise((resolve) => {
+      if (this.weatherReport) {
+        resolve(this.getDayData());
+        return;
+      }
+      this.weatherUpdates.subscribe((res) => {
+        if (res) {
+          resolve(this.getDayData());
+          return;
+        }
+      });
     });
   }
 
@@ -119,8 +93,48 @@ export class WeatherService {
    */
   getCurrentForecast(): Promise<CurrentWeather> {
     return new Promise((resolve, reject) => {
-      resolve(MOCKUP_DATA_2);
+      if (!this.currentForecast) {
+        this.updateCurrentForecast().then(() => {
+          resolve(this.currentForecast);
+          return;
+        }).catch((err) => reject(err));
+      } else {
+        resolve(this.currentForecast);
+        return;
+      }
     });
+  }
+
+  /**
+   * Update the current forecast
+   */
+  updateCurrentForecast() {
+    return new Promise((resolve, reject) => {
+      this._http.post('https://api.openweathermap.org/data/2.5/weather', null, {
+        params: {
+          zip: this.weatherSettings.zipCode + ',' + this.weatherSettings.country,
+          APPID: this.weatherSettings.apiKey,
+        }
+      }).subscribe((res) => {
+        const newForecast: CurrentWeather = {
+          min: this.convertToRequired(res['main'].temp_min).toString(),
+          max: this.convertToRequired(res['main'].temp_max).toString(),
+          current: this.convertToRequired(res['main'].temp, false).toString(),
+          location: res['name'],
+          icon: this.getWeatherIcon(res['weather'][0].icon)
+        };
+        this.currentForecast = newForecast;
+        resolve(newForecast);
+        return;
+      }, (err) => reject(err));
+    });
+  }
+
+  /**
+   * Update the day data
+   */
+  updateDayData() {
+    return this.initialize();
   }
 
   /*
@@ -133,28 +147,26 @@ export class WeatherService {
       throw new Error('Service not initialized');
     }
     const data = this.weatherReport.list;
-    let min = data[0].main.temp_min,
-      max = data[0].main.temp_max,
-      avg = 0,
-      cnt = 0;
-
-    let dateHolder = new Date(data[0].dt_txt);
-    const output = [];
+    let min: number, max: number, dateHolder: Date, currentDay: number, icon: string;
+    const output: Day[] = [];
     for (let i = 0; i < data.length; i++) {
-      if (dateHolder.getDate() < new Date(data[i].dt_txt).getDate()) {
-        avg = avg / cnt;
-        output.push({
-          min: Math.round(min),
-          max: Math.round(max),
-          avg: Math.round(avg),
-          icon: this.getWeatherIcon(data[i].weather[0].icon),
-          date: dateHolder
-        });
-        dateHolder = new Date(data[i].dt_txt);
+      if (i === 0 || currentDay !== dateHolder.getDay() || i >= data.length - 1) {
+        if (i > 0) {
+          output.push({
+            min: this.convertToRequired(min).toString(),
+            max: this.convertToRequired(max).toString(),
+            icon: this.getWeatherIcon(icon ? icon : data[i - 1].weather[0].icon),
+            day: this.getDay(currentDay)
+          });
+        }
+        currentDay = new Date(data[i].dt * 1000).getDay();
         min = data[i].main.temp_min;
         max = data[i].main.temp_max;
-        avg = 0;
-        cnt = 0;
+        icon = null;
+      }
+      dateHolder = new Date(data[i].dt * 1000);
+      if (dateHolder.getHours() >= 10 && dateHolder.getHours() <= 15) {
+        icon = data[i].weather[0].icon;
       }
       if (data[i].main.temp_min < min) {
         min = data[i].main.temp_min;
@@ -162,8 +174,6 @@ export class WeatherService {
       if (data[i].main.temp_max > max) {
         max = data[i].main.temp_max;
       }
-      avg += data[i].main.temp;
-      cnt += 1;
     }
     return output;
   }
@@ -187,6 +197,33 @@ export class WeatherService {
     throw new Error('Outdated data');
   }
 
+  /**
+   * Converts the given temperature to the given preference in WeatherSettings
+   * @param kelvin the temperature to convert
+   */
+  convertToRequired(kelvin: number, round: boolean = true) {
+    if (this.weatherSettings.degreesFormat === DegreeFormat.CELSIUS) {
+      return round ? Math.round(this.convertToCelsius(kelvin)) : Math.round(this.convertToCelsius(kelvin) * 10) / 10;
+    }
+    return round ? Math.round(this.convertToFahrenheit(kelvin)) : Math.round(this.convertToFahrenheit(kelvin) * 10) / 10;
+  }
+
+  /**
+   * Converts Kelvin to Celsius
+   * @param kelvin the temperature to convert in Kelvin
+   */
+  convertToCelsius(kelvin: number) {
+    return kelvin - 273.15;
+  }
+
+  /**
+   * Converts Kelvin to Fahrenheit
+   * @param kelvin the temperature to convert in Kelvin
+   */
+  convertToFahrenheit(kelvin: number): number {
+    return kelvin * (9 / 5) - 459.67;
+  }
+
   /*
   * Converts icon id from api to css classes representing the current weather
   * NOTE: icon data from https://openweathermap.org/weather-conditions
@@ -202,22 +239,39 @@ export class WeatherService {
       case '03d': imgClass = 'wi wi-cloud'; break;
       case '04d': imgClass = 'wi wi-cloudy'; break;
       case '09d': imgClass = 'wi wi-day-showers'; break;
-      case '10d': imgClass = 'wi wi-day-showers'; break;
-      case '11d': imgClass = 'wi wi-day-sleet-storm'; break;
+      case '10d': imgClass = 'wi wi-day-rain'; break;
+      case '11d': imgClass = 'wi wi-day-thunderstorm'; break;
       case '13d': imgClass = 'wi wi-day-snow'; break;
-      case '50d': imgClass = 'wi wi-windy'; break;
+      case '50d': imgClass = 'wi wi-day-fog'; break;
       // Night
-      case '01n': imgClass = 'wi wi-night-sunny'; break;
-      case '02n': imgClass = 'wi wi-night-cloudy'; break;
+      case '01n': imgClass = 'wi wi-night-clear'; break;
+      case '02n': imgClass = 'wi wi-night-alt-cloudy'; break;
       case '03n': imgClass = 'wi wi-cloud'; break;
-      case '04n': imgClass = 'wi wi-cloudy'; break;
-      case '09n': imgClass = 'wi wi-night-showers'; break;
-      case '10n': imgClass = 'wi wi-night-showers'; break;
-      case '11n': imgClass = 'wi wi-night-sleet-storm'; break;
-      case '13n': imgClass = 'wi wi-night-snow'; break;
-      case '50n': imgClass = 'wi wi-windy'; break;
+      case '04n': imgClass = 'wi wi-night-alt-cloudy'; break;
+      case '09n': imgClass = 'wi wi-night-alt-showers'; break;
+      case '10n': imgClass = 'wi wi-night-alt-rain'; break;
+      case '11n': imgClass = 'wi wi-night-alt-lightning'; break;
+      case '13n': imgClass = 'wi wi-night-alt-snow'; break;
+      case '50n': imgClass = 'wi wi-night-fog'; break;
       default: imgClass = 'wi wi-cloud';
     }
     return imgClass;
+  }
+
+  /**
+   * Get the day of the week
+   * @param fullDay (optional) whether to return the full day or shorthand e.g. Tuesday or Tue
+   */
+  getDay(day: number, fullDay: boolean = true): string {
+    switch (day) {
+      case 0: return fullDay ? 'Sunday' : 'Sun';
+      case 1: return fullDay ? 'Monday' : 'Mon';
+      case 2: return fullDay ? 'Tuesday' : 'Tue';
+      case 3: return fullDay ? 'Wednesday' : 'Wed';
+      case 4: return fullDay ? 'Thursday' : 'Thu';
+      case 5: return fullDay ? 'Friday' : 'Fri';
+      case 6: return fullDay ? 'Saturday' : 'Sat';
+      default: return 'UnknownDay';
+    }
   }
 }
