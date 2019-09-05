@@ -21,9 +21,11 @@ export class SetupWeatherComponent {
 
   constructor(private _weatherService: WeatherService, private _weatherSettings: WeatherSettingsService) {
     this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
-      this.weatherSettings = settings;
-      this.selectedCountry.code = settings.country;
-      this.zipCode = settings.zipCode;
+      if (settings) {
+        this.weatherSettings = settings;
+        this.selectedCountry.code = settings.country;
+        this.zipCode = settings.zipCode;
+      } 
     });
     this.countries = this._weatherService.getCountries();
   }

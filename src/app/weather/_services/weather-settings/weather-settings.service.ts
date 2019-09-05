@@ -31,7 +31,7 @@ export class WeatherSettingsService {
   weatherSettings: WeatherSettings;
   settingUpdate = new BehaviorSubject<WeatherSettings>(null);
 
-  constructor(public _storageService: StorageService) {
+  constructor(private _storageService: StorageService) {
     this.loadStorage();
   }
 
@@ -57,7 +57,8 @@ export class WeatherSettingsService {
    * @param newSettings the new settings
    */
   updateSettings(newSettings: WeatherSettings) {
+    this.weatherSettings = newSettings;
     this._storageService.setStorage(this.storageRef, newSettings);
-    this.settingUpdate.next(this.weatherSettings);
+    this.settingUpdate.next(newSettings);
   }
 }

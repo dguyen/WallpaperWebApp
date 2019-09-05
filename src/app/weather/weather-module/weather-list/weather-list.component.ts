@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { WeatherService, Day } from '../../_services/weather-service/weather.service';
+import { WeatherSettingsService } from '../../_services/weather-settings/weather-settings.service';
 
 @Component({
   selector: 'app-weather-list',
@@ -10,8 +11,12 @@ export class WeatherListComponent {
   isLoading = true;
   weekData: Day[];
 
-  constructor(public _weatherService: WeatherService) {
-    this.updateData();
+  constructor(public _weatherService: WeatherService, public _weatherSetting: WeatherSettingsService) {
+    this._weatherSetting.settingUpdate.subscribe((hasUpdate) => {
+      if (hasUpdate) {
+        this.updateData();
+      }
+    });
   }
 
   /**

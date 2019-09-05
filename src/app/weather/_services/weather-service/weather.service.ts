@@ -28,7 +28,7 @@ export class WeatherService {
 
   constructor(private _http: HttpClient, private _weatherSettings: WeatherSettingsService) {
     this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
-      if (settings) {
+      if (settings || this.isUpdateRequired(settings)) {
         this.weatherSettings = settings;
         this.initialize().then(() => {
           this.weatherUpdates.next(true);
@@ -36,6 +36,7 @@ export class WeatherService {
           console.log(err);
         });
       }
+      this.weatherSettings = settings;
     });
   }
 
@@ -61,6 +62,20 @@ export class WeatherService {
         resolve();
       }, (err) => reject(err));
     });
+  }
+
+  /**
+   * Checks if the data is required to update
+   * @param newSettings the new settings to compare values with
+   */
+  isUpdateRequired(newSettings: WeatherSettings): boolean {
+    if (!newSettings) {
+      return false;
+    } else if (!this.weatherSettings) {
+      return true;
+    }
+    // Only update if location is changed
+    return this.weatherSettings.country != newSettings.country || this.weatherSettings.zipCode != newSettings.zipCode;
   }
 
   /**
