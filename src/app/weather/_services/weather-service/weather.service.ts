@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { WeatherSettingsService, WeatherSettings, DegreeFormat } from '../weather-settings/weather-settings.service.js';
+import { WeatherSettingsService, WeatherSettings, DegreeFormat } from '../weather-settings/weather-settings.service';
 import { BehaviorSubject } from 'rxjs';
 import { Countries } from './countries.js';
 
@@ -22,21 +22,24 @@ export class Day {
 @Injectable()
 export class WeatherService {
   weatherReport: any;
+  currentWeatherReport: any;
   weatherUpdates = new BehaviorSubject<boolean>(null);
   weatherSettings: WeatherSettings;
   currentForecast: CurrentWeather;
 
-  constructor(private _http: HttpClient, private _weatherSettings: WeatherSettingsService) {
-    this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
-      if (settings || this.isUpdateRequired(settings)) {
-        this.weatherSettings = settings;
-        this.initialize().then(() => {
-          this.weatherUpdates.next(true);
-        }).catch((err) => {
-          console.log(err);
-        });
+  constructor(private _http: HttpClient, private _weatherSetting: WeatherSettingsService) {
+    this._weatherSetting.settingUpdate.subscribe((settings: WeatherSettings) => {
+      if (settings && this.isUpdateRequired(settings)) {
+        this.weatherSettings = JSON.parse( JSON.stringify(settings));
+        Promise.all([
+          this.initialize(),
+          this.updateCurrentForecast()
+        ]).then(() => this.weatherUpdates.next(true))
+          .catch((err) => console.log(err));
+      } else {
+        this.weatherSettings = JSON.parse(JSON.stringify(settings));
+        this.weatherUpdates.next(true);
       }
-      this.weatherSettings = settings;
     });
   }
 
@@ -75,7 +78,7 @@ export class WeatherService {
       return true;
     }
     // Only update if location is changed
-    return this.weatherSettings.country != newSettings.country || this.weatherSettings.zipCode != newSettings.zipCode;
+    return this.weatherSettings.country !== newSettings.country || this.weatherSettings.zipCode !== newSettings.zipCode;
   }
 
   /**
@@ -109,21 +112,37 @@ export class WeatherService {
   getCurrentForecast(): Promise<CurrentWeather> {
     return new Promise((resolve, reject) => {
       if (!this.currentForecast) {
-        this.updateCurrentForecast().then(() => {
-          resolve(this.currentForecast);
+        this.updateCurrentForecast().then((newForecast) => {
+          resolve(newForecast);
           return;
         }).catch((err) => reject(err));
       } else {
-        resolve(this.currentForecast);
+        resolve(this.formatCurrentWeather());
         return;
       }
     });
   }
 
   /**
+   * Format the current weather report into CurrentWeather
+   */
+  formatCurrentWeather(): CurrentWeather {
+    if (!this.currentWeatherReport) {
+      return null;
+    }
+    return {
+      min: this.convertToRequired(this.currentWeatherReport['main'].temp_min).toString(),
+      max: this.convertToRequired(this.currentWeatherReport['main'].temp_max).toString(),
+      current: this.convertToRequired(this.currentWeatherReport['main'].temp, false).toString(),
+      location: this.currentWeatherReport['name'],
+      icon: this.getWeatherIcon(this.currentWeatherReport['weather'][0].icon)
+    };
+  }
+
+  /**
    * Update the current forecast
    */
-  updateCurrentForecast() {
+  updateCurrentForecast(): Promise<CurrentWeather> {
     return new Promise((resolve, reject) => {
       this._http.post('https://api.openweathermap.org/data/2.5/weather', null, {
         params: {
@@ -131,13 +150,8 @@ export class WeatherService {
           APPID: this.weatherSettings.apiKey,
         }
       }).subscribe((res) => {
-        const newForecast: CurrentWeather = {
-          min: this.convertToRequired(res['main'].temp_min).toString(),
-          max: this.convertToRequired(res['main'].temp_max).toString(),
-          current: this.convertToRequired(res['main'].temp, false).toString(),
-          location: res['name'],
-          icon: this.getWeatherIcon(res['weather'][0].icon)
-        };
+        this.currentWeatherReport = res;
+        const newForecast = this.formatCurrentWeather();
         this.currentForecast = newForecast;
         resolve(newForecast);
         return;

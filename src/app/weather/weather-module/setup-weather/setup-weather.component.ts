@@ -25,7 +25,7 @@ export class SetupWeatherComponent {
         this.weatherSettings = settings;
         this.selectedCountry.code = settings.country;
         this.zipCode = settings.zipCode;
-      } 
+      }
     });
     this.countries = this._weatherService.getCountries();
   }
