@@ -1,0 +1,182 @@
+#settingContainer {
+  width: 250px;
+  height: fit-content;
+  background-color: #0d0d0d;
+  border-radius: 15px;
+  color: white;
+}
+
+#content {
+  padding-top: 2em;
+  padding-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#title {
+  text-align: center;
+  margin-bottom: 0px;
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+#exitContainer {
+  position: relative;
+
+  #exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1em;
+    color: white;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+#selectLocationContainer {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 80%;
+  font-size: 0.75em;
+
+  input, select {
+    padding-left: 5px;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+  }
+    
+  #selectLocation {
+    height: 20px;
+    margin: 5px 0 5px 0;
+    z-index: 100;
+  }
+
+  #zipCodeContainer {
+    height: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    input, #updateLocation {
+      border: 0;
+      border-radius: 15px;
+      width: 60%;
+    }
+
+    input {
+      padding-left: 10px;
+    }
+
+    #updateLocation {
+      background-color: #1DB954;
+      width: 35%;
+      text-align: center;
+      font-weight: bold;
+      transition: 0.25s ease-in;
+    }
+
+    #updateLocation:hover {
+      background-color: #1ED760;
+      transition: 0.25s ease-in;
+    }
+    
+    #updateLocation:active {
+      background-color: #18ac4d;
+      transition: none;
+    }
+  }
+}
+
+.settingItem {
+	margin: 5px 0 2px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  #settingTitle {
+    text-align: center;
+    margin: 0;
+  }
+
+  #checkboxContainer {
+    margin: auto;
+    padding: 5px 0 5px 0;
+    font-size: 0.75em;
+    font-weight: 600;
+
+    label {
+      display: block;
+    }
+  }
+
+  #error {
+    width: 100%;
+    height: 6px;
+    font-size: 0.7em;
+    color: red;
+    text-align: center;
+  }
+}
+
+#apiKey {
+  width: 110px;
+  div {
+    font-size: 0.7em;
+  }
+}
+
+.multiButton {
+  width: 80px;
+  height: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  background-color:	#1b4e96;
+  border-radius: 15px;
+  margin: 5px auto 0 auto;
+
+  div {
+    flex-grow: 1;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 15px;
+    transition: none;
+  }
+
+  div:hover {
+    background-color:	rgb(43, 86, 145);
+    transition: 0.15s ease-in;
+  }
+
+  div:active {
+    background-color:	#0f356b;
+    transition: none;
+  }
+
+  div:nth-child(1) {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  div:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+}
+
+.selectedButton {
+  background-color: #0f356b;
+  transition: none;
+  color: #c9c9c9;
+}
+
+.selectedButton:hover {
+  background-color: #0f356b !important;
+}

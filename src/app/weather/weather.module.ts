@@ -1,14 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { WeatherService } from './_services/weather-service/weather.service';
+
+// Modules
+import { SharedModule } from '../shared/shared.module';
+
+// Components
 import { WeatherModuleComponent } from './weather-module/weather-module.component';
-import { WeatherService } from './_services/weather.service';
+import { SetupWeatherComponent } from './weather-module/setup-weather/setup-weather.component';
+import { WeatherListComponent } from './weather-module/weather-list/weather-list.component';
+import { CurrentTempComponent } from './weather-module/current-temp/current-temp.component';
+import { CurrentWeatherRowComponent } from './weather-module/current-weather-row/current-weather-row.component';
 
 @NgModule({
   declarations: [
-    WeatherModuleComponent
+    WeatherModuleComponent,
+    SetupWeatherComponent,
+    WeatherListComponent,
+    CurrentTempComponent,
+    CurrentWeatherRowComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    SharedModule,
   ],
   providers: [
     WeatherService

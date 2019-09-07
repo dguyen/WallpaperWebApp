@@ -1,23 +1,13 @@
-<div class='container-fluid'>
-	<div class='weatherInfo'>
-		<div id='date'>{{ currDate }}</div>
-		<div id='temp'>
-			{{ currTemp }}&deg;
-			<span id='tempSign'>C</span>
-		</div>
-		<div id='minMaxTemp'>
-			{{ maxTemp }}&deg;
-			<span id='minTemp'>{{ minTemp }}&deg;</span>
-		</div>
-	</div>
+<div id="settingContainer" (click)="openSetting()">
+	<img src="./assets/img/baseline_settings_white_18dp.png">
+</div>
 
-	<div class='weatherNavigation'>
-		<div class='weatherIcon' 
-			*ngFor="let i = index; let day of weatherData"
-			(click)="changeDay(i)"
-			[ngClass]="{'selectedWeatherIcon': currDay == i }">
-			<i class="{{ weatherData[i].icon }}"></i>
-			<div class='weatherDate'>{{ parseShortDate(weatherData[i].date) }}</div>
-		</div>
-	</div>	
+<div id="weatherContainer" [ngClass]="{ 'background': settings && settings.enableBackground }">
+	<div id="tempContainer"><app-current-temp></app-current-temp></div>
+	<div id="currWeatherRow"><app-current-weather-row></app-current-weather-row></div>
+	<div id="listContainer"><app-weather-list></app-weather-list></div>
+</div>
+
+<div id="weatherSetupContainer">
+	<app-setup-weather id="weatherSetup" (closeSetting)="closeSetting()" *ngIf="showSetting"></app-setup-weather>
 </div>

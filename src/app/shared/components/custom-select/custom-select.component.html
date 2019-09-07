@@ -1,0 +1,7 @@
+<div class="customSelect" id="selectLocation" (click)="toggleSelect()">
+  <div id="selectedItem">{{ format(selectedItem) }}</div>
+  <div id="dropContainer" *ngIf="isOpen">
+    <div id="item" *ngFor="let item of itemList" (click)="selectItem(item)">{{ format(item) }}</div>
+  </div>
+  <div id="bottomFooter" *ngIf="isOpen"></div>
+</div>

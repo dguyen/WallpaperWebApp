@@ -1,0 +1,27 @@
+#breaker {
+  height: 25px;
+  color: white;
+
+  #location {
+    float: left;
+    color: rgb(231, 231, 231);
+  }
+  
+  #minMaxTemp {
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+    float: right;
+    width: 75px;
+
+    div:first-child {
+      width: 20px;
+    }
+    
+    div:last-child {
+      width: 20px;
+      padding-left: 23px;
+      color: rgb(207, 207, 207);
+    }
+  }
+}
