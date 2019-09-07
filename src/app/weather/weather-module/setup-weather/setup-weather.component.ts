@@ -20,14 +20,15 @@ export class SetupWeatherComponent {
   zipCode = '';
 
   constructor(private _weatherService: WeatherService, private _weatherSettings: WeatherSettingsService) {
+    this.countries = this._weatherService.getCountries();
     this._weatherSettings.settingUpdate.subscribe((settings: WeatherSettings) => {
       if (settings) {
         this.weatherSettings = settings;
         this.selectedCountry.code = settings.country;
+        this.selectedCountry.name = this.countries.filter((x) => x.code === settings.country)[0].name;
         this.zipCode = settings.zipCode;
       }
     });
-    this.countries = this._weatherService.getCountries();
   }
 
   /**
@@ -65,6 +66,33 @@ export class SetupWeatherComponent {
         alert('Invalid API key. For more information visit \'https://openweathermap.org/faq#error401\'');
       });
     }
+  }
+
+  /**
+   * Fires when an item is selected from the custom selector component
+   * @param item the item selected
+   */
+  countrySelected(newCountry) {
+    this.selectedCountry = newCountry;
+  }
+
+  /**
+   * Display a prompt for the user to input a new zip code
+   */
+  changeZipCode() {
+    const newZipCode = prompt('Enter new zip code');
+    if (!newZipCode) {
+      return;
+    }
+    this.zipCode = newZipCode;
+  }
+
+  /**
+   * Returns the formatted view of the country
+   * @param country country to format
+   */
+  formatCountry(country: any) {
+    return country.name;
   }
 
   /**

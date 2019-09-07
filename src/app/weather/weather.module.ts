@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WeatherService } from './_services/weather-service/weather.service';
 
+// Modules
+import { SharedModule } from '../shared/shared.module';
+
 // Components
 import { WeatherModuleComponent } from './weather-module/weather-module.component';
 import { SetupWeatherComponent } from './weather-module/setup-weather/setup-weather.component';
@@ -20,7 +23,8 @@ import { CurrentWeatherRowComponent } from './weather-module/current-weather-row
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    SharedModule,
   ],
   providers: [
     WeatherService

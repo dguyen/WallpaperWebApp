@@ -52,19 +52,10 @@
     box-sizing: border-box;         /* Opera/IE 8+ */
   }
     
-  select {
+  #selectLocation {
     height: 20px;
-    border: 0;
-    border-radius: 15px;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance:none;
     margin: 5px 0 5px 0;
-  }
-
-  select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
+    z-index: 100;
   }
 
   #zipCodeContainer {
@@ -80,7 +71,7 @@
     }
 
     input {
-      padding-left: 8px;
+      padding-left: 10px;
     }
 
     #updateLocation {
@@ -89,13 +80,11 @@
       text-align: center;
       font-weight: bold;
       transition: 0.25s ease-in;
-
     }
 
     #updateLocation:hover {
       background-color: #1ED760;
       transition: 0.25s ease-in;
-    
     }
     
     #updateLocation:active {

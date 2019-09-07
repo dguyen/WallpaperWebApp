@@ -10,12 +10,9 @@
     <div class="settingItem">
       <h5 id="settingTitle">Location</h5>
       <div id="selectLocationContainer">
-        <select [(ngModel)]="selectedCountry" [compareWith]="compareFn">
-          <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
-        </select> 
-
+        <app-custom-select id="selectLocation" (itemSelected)="countrySelected($event)" [itemList]="countries" [formatItem]="formatCountry" [selectedItem]="selectedCountry"></app-custom-select>
         <div id="zipCodeContainer">
-          <input type="text" placeholder="ZipCode" [(ngModel)]="zipCode">
+          <input type="text" placeholder="ZipCode" [(ngModel)]="zipCode" (click)="changeZipCode()">
           <div id="updateLocation" (click)="updateLocation()">Update</div>
         </div>
       </div>
@@ -36,6 +33,7 @@
 
       <div id="checkboxContainer">
         <label><input type="checkbox" [(ngModel)]="weatherSettings.enableBackground" (ngModelChange)="updateSettings()">Background</label>
+        <label><input type="checkbox" [(ngModel)]="weatherSettings.roundTemp" (ngModelChange)="updateSettings()">Round temperature</label>
       </div>
     </div>
   </div>
