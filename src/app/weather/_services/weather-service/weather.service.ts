@@ -133,7 +133,7 @@ export class WeatherService {
     return {
       min: this.convertToRequired(this.currentWeatherReport['main'].temp_min).toString(),
       max: this.convertToRequired(this.currentWeatherReport['main'].temp_max).toString(),
-      current: this.convertToRequired(this.currentWeatherReport['main'].temp, false).toString(),
+      current: this.convertToRequired(this.currentWeatherReport['main'].temp, this.weatherSettings.roundTemp).toString(),
       location: this.currentWeatherReport['name'],
       icon: this.getWeatherIcon(this.currentWeatherReport['weather'][0].icon)
     };

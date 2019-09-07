@@ -9,7 +9,8 @@ export enum DegreeFormat {
 
 export interface WeatherSettings {
   degreesFormat: DegreeFormat;
-  enableBackground: Boolean;
+  enableBackground: boolean;
+  roundTemp: boolean;
   country: string;
   zipCode: string;
   apiKey: string;
@@ -18,6 +19,7 @@ export interface WeatherSettings {
 const DEFAULT_SETTINGS: WeatherSettings = {
   degreesFormat: DegreeFormat.CELSIUS,
   enableBackground: true,
+  roundTemp: true,
   country: 'AU',
   zipCode: '3000',
   apiKey: '084b04a1bd24b3a2834390ec8153f9b1'
