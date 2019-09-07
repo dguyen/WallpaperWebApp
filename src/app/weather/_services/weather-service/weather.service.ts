@@ -21,6 +21,8 @@ export class Day {
 
 @Injectable()
 export class WeatherService {
+  private refreshRate = 3600000;
+  private updaterRef: any;
   weatherReport: any;
   currentWeatherReport: any;
   weatherUpdates = new BehaviorSubject<boolean>(null);
@@ -31,16 +33,47 @@ export class WeatherService {
     this._weatherSetting.settingUpdate.subscribe((settings: WeatherSettings) => {
       if (settings && this.isUpdateRequired(settings)) {
         this.weatherSettings = JSON.parse( JSON.stringify(settings));
-        Promise.all([
-          this.initialize(),
-          this.updateCurrentForecast()
-        ]).then(() => this.weatherUpdates.next(true))
-          .catch((err) => console.log(err));
+        this.updateData();
       } else {
         this.weatherSettings = JSON.parse(JSON.stringify(settings));
         this.weatherUpdates.next(true);
       }
     });
+
+  }
+
+  /**
+   * Updates the data periodically
+   */
+  private startUpdater() {
+    if (this.updaterRef) {
+      return;
+    }
+    this.updaterRef = setInterval(() => {
+      this.updateData();
+    }, this.refreshRate);
+  }
+
+  /**
+   * Reset the updater
+   */
+  private resetUpdater() {
+    clearInterval(this.updaterRef);
+    this.updaterRef = null;
+    this.startUpdater();
+  }
+
+  /**
+   * Update the weather data
+   */
+  updateData() {
+    return Promise.all([
+      this.initialize(),
+      this.updateCurrentForecast()
+    ]).then(() => {
+      this.weatherUpdates.next(true);
+      this.resetUpdater();
+    }).catch((err) => console.log(err));
   }
 
   /**
