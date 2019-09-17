@@ -13,6 +13,7 @@ export interface ClockSettings {
   padHours: boolean;
   showSeconds: boolean;
   showAmPm: boolean;
+  autoResize: boolean;
 }
 
 const DEFAULT_SETTINGS: ClockSettings = {
@@ -21,6 +22,7 @@ const DEFAULT_SETTINGS: ClockSettings = {
   padHours: false,
   showSeconds: false,
   showAmPm: true,
+  autoResize: false,
 };
 
 @Injectable({

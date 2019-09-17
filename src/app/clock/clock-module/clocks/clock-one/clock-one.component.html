@@ -1,4 +1,4 @@
-<div id="clockContainer">
+<div id="clockContainer" [ngClass]="{'autoResize': clockSettings.autoResize}">
   <div id="settingContainer" (click)="openSettings()">
     <img src="./assets/img/baseline_settings_white_18dp.png">
   </div>

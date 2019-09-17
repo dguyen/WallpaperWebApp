@@ -1,7 +1,5 @@
 #clockContainer {
-  min-width: 375px;
-  width: fit-content;
-  width: -moz-fit-content;
+  width: 525px;
   padding: 0 3em 0 3em;
   height: 175px;
   background: rgba(0, 0, 0, 0.5);
@@ -11,9 +9,15 @@
   align-items: center;
 }
 
+.autoResize {
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+}
+
 #day {
   font-size: 2.5em;
   color: #ccc;
+  white-space: nowrap;
 }
 
 #clock {
